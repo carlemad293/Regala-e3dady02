@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Regala e3dady - A Flutter application.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Regala e3dady">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Regala e3dady</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = null;
+  </script>
+  <script src="flutter.js" defer></script>
+</head>
+<body>
+<script>
+  window.addEventListener('load', function() {
+    // Initialize Flutter Web
+    _flutter = {
+      loader: {
+        loadEntrypoint: function(options) {
+          return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'main.dart.js';
+            script.type = 'application/javascript';
+            script.onload = function() {
+              if (window.flutterEngineInitializer) {
+                resolve(window.flutterEngineInitializer);
+              } else {
+                reject(new Error('Flutter engine initializer not found'));
+              }
+            };
+            script.onerror = reject;
+            document.body.appendChild(script);
+          });
+        }
+      }
+    };
+
+    _flutter.loader.loadEntrypoint({
+      serviceWorker: {
+        serviceWorkerVersion: serviceWorkerVersion,
+      }
+    }).then(function(engineInitializer) {
+      return engineInitializer.initializeEngine();
+    }).then(function(appRunner) {
+      return appRunner.runApp();
+    }).catch(function(error) {
+      console.error('Error initializing Flutter', error);
+    });
+  });
+</script>
+</body>
+</html>

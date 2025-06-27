@@ -1,0 +1,2 @@
+G:/flutter/khdma-main - Copy/khdma_main/android/app/.cxx/RelWithDebInfo/2681q2l2/armeabi-v7a/CMakeFiles/edit_cache.dir
+G:/flutter/khdma-main - Copy/khdma_main/android/app/.cxx/RelWithDebInfo/2681q2l2/armeabi-v7a/CMakeFiles/rebuild_cache.dir

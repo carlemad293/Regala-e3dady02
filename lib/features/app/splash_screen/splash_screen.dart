@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
   String errorMessage = '';
   late AnimationController _controller;
   late Animation<double> _animation;
+  bool _updateRequired = false;
 
   @override
   void initState() {
@@ -43,6 +44,9 @@ class _SplashScreenState extends State<SplashScreen>
     try {
       // Ensure Firebase is fully initialized before proceeding
       await _ensureFirebaseInitialized();
+
+      // Check app version before proceeding
+      await _checkAppVersion();
 
       await _fetchImageUrl();
       await _checkAuthAndNavigate();
@@ -83,16 +87,37 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _checkAppVersion() async {
     try {
-      while (mounted) {
+      print('Starting version check...');
+
+      // Skip version check for web platform
+      if (kIsWeb) {
+        print('Skipping version check for web platform');
+        return;
+      }
+
+      int attempts = 0;
+      const maxAttempts = 3;
+
+      while (mounted && attempts < maxAttempts) {
+        attempts++;
+        print('Version check attempt $attempts of $maxAttempts');
+
         Map<String, dynamic> versionInfo =
             await VersionCheckService.checkVersion();
 
+        print('Version check result: $versionInfo');
+
         if (versionInfo['needsUpdate'] == true) {
+          print('Update required, showing dialog');
+          setState(() {
+            _updateRequired = true;
+          });
           // Show version update dialog
           if (mounted) {
             bool shouldUpdate = await showDialog<bool>(
                   context: context,
                   barrierDismissible: false,
+                  useSafeArea: true,
                   builder: (context) => VersionUpdateDialog(
                     currentVersion: versionInfo['currentVersion'] ?? '2.0.0',
                     requiredVersion: versionInfo['requiredVersion'] ?? '2.0.0',
@@ -105,12 +130,24 @@ class _SplashScreenState extends State<SplashScreen>
             if (shouldUpdate) {
               await Future.delayed(Duration(seconds: 2));
               continue; // Check again
+            } else {
+              // User cannot bypass the update - keep showing the dialog
+              print('User attempted to bypass update - keeping dialog open');
+              continue; // Keep checking and showing dialog
             }
+          } else {
+            // No update needed, reset the flag and break the loop
+            setState(() {
+              _updateRequired = false;
+            });
+            print('No update required');
+            break;
           }
-        } else {
-          // No update needed, break the loop
-          break;
         }
+      }
+
+      if (attempts >= maxAttempts) {
+        print('Max version check attempts reached, proceeding with app');
       }
     } catch (e) {
       print('Error checking app version: $e');
@@ -286,97 +323,101 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      backgroundColor: isDark ? Color(0xFF121212) : Colors.white,
-      body: Stack(
-        children: [
-          Opacity(
-            opacity: isDark ? 0.15 : 0.2,
-            child: Image.asset(
-              'assets/crosses_bg.png',
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-            ),
-          ),
-          Center(
-            child: FadeTransition(
-              opacity: _animation,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (hasError)
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Error: $errorMessage',
-                        style: TextStyle(
-                            color: isDark ? Colors.red.shade300 : Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  else
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      constraints: const BoxConstraints(
-                        maxWidth: 500,
-                        maxHeight: 600,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: isDark ? Colors.white70 : Colors.black,
-                          width: 4.0,
-                        ),
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: imageUrl != null
-                            ? (kIsWeb
-                                ? Image.network(
-                                    imageUrl!,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      print('Image loading error: $error');
-                                      return Image.asset(
-                                        'assets/img_1.png',
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                      );
-                                    },
-                                  )
-                                : CachedNetworkImage(
-                                    imageUrl: imageUrl!,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    errorWidget: (context, url, error) {
-                                      print('Image loading error: $error');
-                                      return Image.asset(
-                                        'assets/img_1.png',
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                      );
-                                    },
-                                  ))
-                            : Image.asset(
-                                'assets/img_1.png',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
-                      ),
-                    ),
-                ],
+    return PopScope(
+      canPop: !_updateRequired,
+      child: Scaffold(
+        backgroundColor: isDark ? Color(0xFF121212) : Colors.white,
+        body: Stack(
+          children: [
+            Opacity(
+              opacity: isDark ? 0.15 : 0.2,
+              child: Image.asset(
+                'assets/crosses_bg.png',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
               ),
             ),
-          ),
-        ],
+            Center(
+              child: FadeTransition(
+                opacity: _animation,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (hasError)
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Error: $errorMessage',
+                          style: TextStyle(
+                              color: isDark ? Colors.red.shade300 : Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    else
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        constraints: const BoxConstraints(
+                          maxWidth: 500,
+                          maxHeight: 600,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: isDark ? Colors.white70 : Colors.black,
+                            width: 4.0,
+                          ),
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: imageUrl != null
+                              ? (kIsWeb
+                                  ? Image.network(
+                                      imageUrl!,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        print('Image loading error: $error');
+                                        return Image.asset(
+                                          'assets/img_1.png',
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        );
+                                      },
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl: imageUrl!,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      errorWidget: (context, url, error) {
+                                        print('Image loading error: $error');
+                                        return Image.asset(
+                                          'assets/img_1.png',
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        );
+                                      },
+                                    ))
+                              : Image.asset(
+                                  'assets/img_1.png',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

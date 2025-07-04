@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,6 +27,10 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
   final _psalmContentController = TextEditingController();
   final _appVersionController = TextEditingController();
   final _updateLinkController = TextEditingController();
+  final _iosVersionController = TextEditingController();
+  final _androidVersionController = TextEditingController();
+  final _iosUpdateLinkController = TextEditingController();
+  final _androidUpdateLinkController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   TimeOfDay _selectedEndTime = TimeOfDay.now(); // Add end time
@@ -1252,6 +1257,10 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
         setState(() {
           _appVersionController.text = data['current_version'] ?? '2.0.0';
           _updateLinkController.text = data['update_link'] ?? '';
+          _iosVersionController.text = data['ios_version'] ?? '';
+          _androidVersionController.text = data['android_version'] ?? '';
+          _iosUpdateLinkController.text = data['ios_update_link'] ?? '';
+          _androidUpdateLinkController.text = data['android_update_link'] ?? '';
         });
       }
     } catch (e) {
@@ -1274,6 +1283,10 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
           .set({
         'current_version': _appVersionController.text,
         'update_link': _updateLinkController.text,
+        'ios_version': _iosVersionController.text,
+        'android_version': _androidVersionController.text,
+        'ios_update_link': _iosUpdateLinkController.text,
+        'android_update_link': _androidUpdateLinkController.text,
         'last_updated': FieldValue.serverTimestamp(),
       });
 
@@ -3069,8 +3082,9 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // General Version
                 Text(
-                  'Required App Version',
+                  'Required App Version (General)',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -3080,8 +3094,12 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                 SizedBox(height: 8),
                 TextField(
                   controller: _appVersionController,
+                  keyboardType: TextInputType.number,
                   style:
                       TextStyle(color: isDark ? Colors.white : Colors.black87),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                  ],
                   decoration: InputDecoration(
                     hintText: 'e.g., 2.0.0',
                     hintStyle: TextStyle(
@@ -3115,8 +3133,9 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                   ),
                 ),
                 SizedBox(height: 16),
+
                 Text(
-                  'Update Link',
+                  'Update Link (General)',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -3160,6 +3179,248 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                       ),
                     ),
                   ),
+                ),
+                SizedBox(height: 16),
+
+                // Platform-specific settings in collapsible section
+                ExpansionTile(
+                  title: Text(
+                    'Platform-Specific Settings (Optional)',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Platform-Specific Versions',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white70 : Colors.black54,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'iOS Version',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: isDark
+                                            ? Colors.white70
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    TextField(
+                                      controller: _iosVersionController,
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black87),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9.]')),
+                                      ],
+                                      decoration: InputDecoration(
+                                        hintText: 'e.g., 2.0.0',
+                                        hintStyle: TextStyle(
+                                            color: isDark
+                                                ? Colors.white70
+                                                : Colors.black54),
+                                        filled: true,
+                                        fillColor: isDark
+                                            ? Colors.white.withOpacity(0.05)
+                                            : Colors.blue.withOpacity(0.05),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                              color: isDark
+                                                  ? Colors.white30
+                                                  : Colors.blue
+                                                      .withOpacity(0.2)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Android Version',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: isDark
+                                            ? Colors.white70
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    TextField(
+                                      controller: _androidVersionController,
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black87),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9.]')),
+                                      ],
+                                      decoration: InputDecoration(
+                                        hintText: 'e.g., 2.0.0',
+                                        hintStyle: TextStyle(
+                                            color: isDark
+                                                ? Colors.white70
+                                                : Colors.black54),
+                                        filled: true,
+                                        fillColor: isDark
+                                            ? Colors.white.withOpacity(0.05)
+                                            : Colors.blue.withOpacity(0.05),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                              color: isDark
+                                                  ? Colors.white30
+                                                  : Colors.blue
+                                                      .withOpacity(0.2)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Platform-Specific Update Links',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white70 : Colors.black54,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'iOS Update Link',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: isDark
+                                            ? Colors.white70
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    TextField(
+                                      controller: _iosUpdateLinkController,
+                                      style: TextStyle(
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black87),
+                                      decoration: InputDecoration(
+                                        hintText: 'App Store link',
+                                        hintStyle: TextStyle(
+                                            color: isDark
+                                                ? Colors.white70
+                                                : Colors.black54),
+                                        filled: true,
+                                        fillColor: isDark
+                                            ? Colors.white.withOpacity(0.05)
+                                            : Colors.blue.withOpacity(0.05),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                              color: isDark
+                                                  ? Colors.white30
+                                                  : Colors.blue
+                                                      .withOpacity(0.2)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Android Update Link',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: isDark
+                                            ? Colors.white70
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    TextField(
+                                      controller: _androidUpdateLinkController,
+                                      style: TextStyle(
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black87),
+                                      decoration: InputDecoration(
+                                        hintText: 'Play Store link',
+                                        hintStyle: TextStyle(
+                                            color: isDark
+                                                ? Colors.white70
+                                                : Colors.black54),
+                                        filled: true,
+                                        fillColor: isDark
+                                            ? Colors.white.withOpacity(0.05)
+                                            : Colors.blue.withOpacity(0.05),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                              color: isDark
+                                                  ? Colors.white30
+                                                  : Colors.blue
+                                                      .withOpacity(0.2)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 24),
                 ElevatedButton.icon(
@@ -3213,9 +3474,12 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                       SizedBox(height: 8),
                       Text(
                         '• Required App Version: The minimum version required to use the app\n'
+                        '• Platform-specific versions (iOS/Android): Override general version for specific platforms\n'
                         '• Update Link: Link to the app store where users can download the update\n'
+                        '• Platform-specific links: Override general link for specific platforms\n'
                         '• If app version on phone is lower than required version, update dialog will show\n'
-                        '• Version format should be: x.y.z (e.g., 2.0.0, 2.1.0)',
+                        '• Version format should be: x.y.z (e.g., 2.0.0, 2.1.0)\n'
+                        '• Web platform is automatically bypassed and doesn\'t require updates',
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: isDark ? Colors.white70 : Colors.black54,

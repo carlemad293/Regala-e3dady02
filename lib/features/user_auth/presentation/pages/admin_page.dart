@@ -7,6 +7,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:file_saver/file_saver.dart';
+import 'dart:convert';
+import 'admin_export_page.dart';
 
 import 'models/activity.dart';
 
@@ -2324,6 +2327,110 @@ class _AdminUniversalPointsScreenState
             tooltip: 'Reset All Points',
             onPressed: _resetAllPoints,
           ),
+          IconButton(
+            icon: Icon(Icons.info_outline),
+            tooltip: 'Info',
+            onPressed: () async {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    backgroundColor: _isDark ? Color(0xFF2A2A2A) : Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    child: FutureBuilder<List<int>>(
+                      future: _getAdminStats(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container(
+                            padding: EdgeInsets.all(32),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        final stats = snapshot.data!;
+                        final totalUsers = stats[0];
+                        final totalAdmins = stats[1];
+                        final blockedUsers = stats[2];
+                        final pendingRequests = stats[3];
+                        return Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.info_outline,
+                                      color: _isDark
+                                          ? Colors.blue[300]
+                                          : Colors.blue),
+                                  SizedBox(width: 8),
+                                  Text('Admin Info',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: _isDark
+                                              ? Colors.white
+                                              : Colors.black)),
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              _buildStatRow(Icons.people, 'Total Users',
+                                  totalUsers, _isDark),
+                              SizedBox(height: 12),
+                              _buildStatRow(Icons.admin_panel_settings,
+                                  'Admins', totalAdmins, _isDark),
+                              SizedBox(height: 12),
+                              _buildStatRow(Icons.block, 'Blocked Users',
+                                  blockedUsers, _isDark,
+                                  color: Colors.red),
+                              SizedBox(height: 12),
+                              _buildStatRow(Icons.pending_actions,
+                                  'Pending Requests', pendingRequests, _isDark,
+                                  color: Colors.orange),
+                              SizedBox(height: 24),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton.icon(
+                                    icon: Icon(Icons.download),
+                                    label: Text('Go to Export Page'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: _isDark
+                                          ? Colors.blue[900]
+                                          : Colors.blue,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => AdminExportPage(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text('Close',
+                                        style: TextStyle(
+                                            color: _isDark
+                                                ? Colors.blue[300]
+                                                : Colors.blue)),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ],
       ),
       body: Container(
@@ -2494,6 +2601,47 @@ class _AdminUniversalPointsScreenState
           ],
         ),
       ),
+    );
+  }
+
+  // Helper to fetch admin stats: [totalUsers, totalAdmins, blockedUsers, pendingRequests]
+  Future<List<int>> _getAdminStats() async {
+    final usersSnap =
+        await FirebaseFirestore.instance.collection('users').get();
+    final adminsSnap =
+        await FirebaseFirestore.instance.collection('admins').get();
+    final requestsSnap = await FirebaseFirestore.instance
+        .collection('requests')
+        .where('isApproved', isEqualTo: false)
+        .get();
+    int totalUsers = usersSnap.size;
+    int totalAdmins = adminsSnap.size;
+    int blockedUsers = usersSnap.docs
+        .where((doc) => (doc.data()['blocked'] ?? false) == true)
+        .length;
+    int pendingRequests = requestsSnap.size;
+    return [totalUsers, totalAdmins, blockedUsers, pendingRequests];
+  }
+
+  // Helper widget for stat row
+  Widget _buildStatRow(IconData icon, String label, int value, bool isDark,
+      {Color? color}) {
+    return Row(
+      children: [
+        Icon(icon, color: color ?? (isDark ? Colors.blue[300] : Colors.blue)),
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(label,
+              style: TextStyle(
+                  fontSize: 16,
+                  color: isDark ? Colors.white70 : Colors.black87)),
+        ),
+        Text(value.toString(),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: color ?? (isDark ? Colors.white : Colors.black))),
+      ],
     );
   }
 }

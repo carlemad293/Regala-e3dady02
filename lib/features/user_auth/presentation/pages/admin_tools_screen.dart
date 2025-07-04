@@ -46,6 +46,7 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
   bool _isFixersExpanded = false;
   bool _isEventsExpanded = false; // Add this line to fix the error
   String? _editingEventId;
+  DateTime? _versionLastUpdated;
 
   @override
   void initState() {
@@ -1261,6 +1262,11 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
           _androidVersionController.text = data['android_version'] ?? '';
           _iosUpdateLinkController.text = data['ios_update_link'] ?? '';
           _androidUpdateLinkController.text = data['android_update_link'] ?? '';
+
+          // Load last updated timestamp
+          if (data['last_updated'] != null) {
+            _versionLastUpdated = (data['last_updated'] as Timestamp).toDate();
+          }
         });
       }
     } catch (e) {
@@ -3437,6 +3443,41 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                     ),
                   ),
                 ),
+                SizedBox(height: 8),
+                // Display last updated timestamp
+                if (_versionLastUpdated != null)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Colors.grey[800]!.withOpacity(0.3)
+                          : Colors.grey[100]!.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isDark ? Colors.grey[600]! : Colors.grey[300]!,
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.access_time,
+                          size: 16,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Last updated: ${DateFormat('MMM d, yyyy • h:mm a').format(_versionLastUpdated!)}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 SizedBox(height: 16),
                 Container(
                   padding: EdgeInsets.all(16),

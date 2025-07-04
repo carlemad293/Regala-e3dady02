@@ -45,7 +45,8 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController =
+        TabController(length: 7, vsync: this); // Increase tab count by 1
     _loadResources();
     _loadEvents();
     _loadFixers();
@@ -1353,6 +1354,10 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
               icon: Icon(Icons.settings),
               text: 'Version Control',
             ),
+            Tab(
+              icon: Icon(Icons.list),
+              text: 'Activities',
+            ),
           ],
         ),
       ),
@@ -1375,6 +1380,7 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
             _buildResourcesTab(isDark),
             _buildFixersTab(isDark),
             _buildVersionControlTab(isDark),
+            _buildActivitiesTab(isDark), // New tab
           ],
         ),
       ),
@@ -3222,6 +3228,398 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildActivitiesTab(bool isDark) {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController pointsController = TextEditingController();
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Card(
+            color: isDark
+                ? Colors.white.withOpacity(0.05)
+                : Colors.blue.withOpacity(0.05),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Add New Activity',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: nameController,
+                    style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black87),
+                    decoration: InputDecoration(
+                      labelText: 'Activity Name',
+                      labelStyle: TextStyle(
+                          color: isDark ? Colors.white70 : Colors.black54),
+                      filled: true,
+                      fillColor: isDark
+                          ? Colors.white.withOpacity(0.05)
+                          : Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: isDark
+                              ? Colors.white30
+                              : Colors.blue.withOpacity(0.2),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: isDark
+                              ? Colors.white30
+                              : Colors.blue.withOpacity(0.2),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: isDark ? Colors.blue[300]! : Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: pointsController,
+                    style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black87),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Points',
+                      labelStyle: TextStyle(
+                          color: isDark ? Colors.white70 : Colors.black54),
+                      filled: true,
+                      fillColor: isDark
+                          ? Colors.white.withOpacity(0.05)
+                          : Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: isDark
+                              ? Colors.white30
+                              : Colors.blue.withOpacity(0.2),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: isDark
+                              ? Colors.white30
+                              : Colors.blue.withOpacity(0.2),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: isDark ? Colors.blue[300]! : Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.add),
+                    label: Text('Add Activity'),
+                    onPressed: () async {
+                      final name = nameController.text.trim();
+                      final points = int.tryParse(pointsController.text.trim());
+                      if (name.isEmpty || points == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Please enter valid name and points')),
+                        );
+                        return;
+                      }
+                      await FirebaseFirestore.instance
+                          .collection('activities')
+                          .add({
+                        'name': name,
+                        'points': points,
+                      });
+                      nameController.clear();
+                      pointsController.clear();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Activity added successfully')),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? Colors.blue[900] : Colors.blue,
+                      foregroundColor: Colors.white,
+                      minimumSize: Size(double.infinity, 45),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 24),
+          Text(
+            'Current Activities',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          SizedBox(height: 12),
+          StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection('activities').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Text('Error loading activities');
+              }
+              final docs = snapshot.data?.docs ?? [];
+              if (docs.isEmpty) {
+                return Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Center(
+                    child: Text(
+                      'No activities found',
+                      style: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.black54,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: docs.length,
+                itemBuilder: (context, index) {
+                  final doc = docs[index];
+                  final data = doc.data() as Map<String, dynamic>;
+                  final name = data['name'] ?? '';
+                  final points = data['points'] ?? 0;
+                  return Card(
+                    margin: EdgeInsets.only(bottom: 8),
+                    color:
+                        isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                        color: isDark
+                            ? Colors.white.withOpacity(0.1)
+                            : Colors.blue.withOpacity(0.1),
+                        width: 1,
+                      ),
+                    ),
+                    child: ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      title: Text(
+                        name,
+                        style: TextStyle(
+                          color: isDark ? Colors.white : Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '$points points',
+                        style: TextStyle(
+                          color: isDark ? Colors.white70 : Colors.black54,
+                        ),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit,
+                                color: isDark ? Colors.blue[300] : Colors.blue),
+                            onPressed: () {
+                              _showEditActivityDialog(
+                                  context, doc.id, name, points, isDark);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete,
+                                color: isDark ? Colors.red[300] : Colors.red),
+                            onPressed: () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor:
+                                      isDark ? Color(0xFF2A2A2A) : Colors.white,
+                                  title: Text('Delete Activity',
+                                      style: TextStyle(
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black87)),
+                                  content: Text(
+                                      'Are you sure you want to delete this activity?',
+                                      style: TextStyle(
+                                          color: isDark
+                                              ? Colors.white70
+                                              : Colors.black54)),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('Cancel',
+                                          style: TextStyle(
+                                              color: isDark
+                                                  ? Colors.white70
+                                                  : Colors.black54)),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      child: Text('Delete'),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (confirmed == true) {
+                                await FirebaseFirestore.instance
+                                    .collection('activities')
+                                    .doc(doc.id)
+                                    .delete();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Activity deleted successfully')),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditActivityDialog(BuildContext context, String docId,
+      String currentName, int currentPoints, bool isDark) {
+    final TextEditingController nameController =
+        TextEditingController(text: currentName);
+    final TextEditingController pointsController =
+        TextEditingController(text: currentPoints.toString());
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? Color(0xFF2A2A2A) : Colors.white,
+        title: Text('Edit Activity',
+            style: TextStyle(color: isDark ? Colors.white : Colors.black87)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+              decoration: InputDecoration(
+                labelText: 'Activity Name',
+                labelStyle:
+                    TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: isDark
+                          ? Colors.white30
+                          : Colors.blue.withOpacity(0.2)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: isDark ? Colors.blue[300]! : Colors.blue),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: pointsController,
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Points',
+                labelStyle:
+                    TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: isDark
+                          ? Colors.white30
+                          : Colors.blue.withOpacity(0.2)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: isDark ? Colors.blue[300]! : Colors.blue),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: Text('Cancel',
+                style:
+                    TextStyle(color: isDark ? Colors.white70 : Colors.black54)),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDark ? Colors.blue[900] : Colors.blue,
+              foregroundColor: Colors.white,
+            ),
+            child: Text('Save'),
+            onPressed: () async {
+              final name = nameController.text.trim();
+              final points = int.tryParse(pointsController.text.trim());
+              if (name.isEmpty || points == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Please enter valid name and points')),
+                );
+                return;
+              }
+              await FirebaseFirestore.instance
+                  .collection('activities')
+                  .doc(docId)
+                  .update({
+                'name': name,
+                'points': points,
+              });
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Activity updated successfully')),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

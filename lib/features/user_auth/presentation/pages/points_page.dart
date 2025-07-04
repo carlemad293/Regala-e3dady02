@@ -20,72 +20,7 @@ class PointScreen extends StatefulWidget {
 }
 
 class _PointScreenState extends State<PointScreen> {
-  final List<Activity> activities = [
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'قداس',
-        points: 3,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'اعتراف',
-        points: 5,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'اجتماع',
-        points: 2,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'مزمور الكورة',
-        points: 3,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'عشية',
-        points: 2,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'صلاة باكر',
-        points: 1,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'صلاة نوم',
-        points: 1,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'إصحاح من الإنجيل',
-        points: 1,
-        timestamp: DateTime.now(),
-        userName: ''),
-    Activity(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userEmail: '',
-        name: 'مهرجان',
-        points: 10,
-        timestamp: DateTime.now(),
-        userName: ''),
-  ];
-
+  List<Activity> _activities = [];
   Activity? selectedActivity;
   final TextEditingController _activityController = TextEditingController();
   final TextEditingController _pointsController = TextEditingController();
@@ -569,39 +504,79 @@ class _PointScreenState extends State<PointScreen> {
                                               ? Colors.grey[700]!
                                               : Colors.grey),
                                     ),
-                                    child: DropdownButton<Activity>(
-                                      hint: Text('Select Activity',
-                                          style: TextStyle(
-                                              color: isDark
-                                                  ? Colors.white
-                                                  : Colors.black)),
-                                      value: selectedActivity,
-                                      onChanged: _isUserBlocked
-                                          ? null
-                                          : (Activity? newValue) {
-                                              setState(() {
-                                                selectedActivity = newValue;
-                                                _showCustomFields = false;
-                                              });
-                                            },
-                                      items:
-                                          activities.map((Activity activity) {
-                                        return DropdownMenuItem<Activity>(
-                                          value: activity,
-                                          child: Text(
-                                            '${activity.name} (${activity.points} points)',
-                                            style: TextStyle(
-                                                color: isDark
-                                                    ? Colors.white
-                                                    : Colors.black),
-                                          ),
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('activities')
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return SizedBox(
+                                            width: 200,
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          );
+                                        }
+                                        if (snapshot.hasError) {
+                                          return Text(
+                                              'Error loading activities');
+                                        }
+                                        final docs = snapshot.data?.docs ?? [];
+                                        _activities = docs.map((doc) {
+                                          final data = doc.data()
+                                              as Map<String, dynamic>;
+                                          return Activity(
+                                            id: doc.id,
+                                            userEmail: '',
+                                            userName: '',
+                                            name: data['name'] ?? '',
+                                            points: data['points'] ?? 0,
+                                            timestamp: DateTime.now(),
+                                            isApproved: false,
+                                          );
+                                        }).toList();
+                                        return DropdownButton<Activity>(
+                                          hint: Text('Select Activity',
+                                              style: TextStyle(
+                                                  color: isDark
+                                                      ? Colors.white
+                                                      : Colors.black)),
+                                          value: selectedActivity != null &&
+                                                  _activities.any((a) =>
+                                                      a.id ==
+                                                      selectedActivity!.id)
+                                              ? selectedActivity
+                                              : null,
+                                          onChanged: _isUserBlocked
+                                              ? null
+                                              : (Activity? newValue) {
+                                                  setState(() {
+                                                    selectedActivity = newValue;
+                                                    _showCustomFields = false;
+                                                  });
+                                                },
+                                          items: _activities
+                                              .map((Activity activity) {
+                                            return DropdownMenuItem<Activity>(
+                                              value: activity,
+                                              child: Text(
+                                                '${activity.name} (${activity.points} points)',
+                                                style: TextStyle(
+                                                    color: isDark
+                                                        ? Colors.white
+                                                        : Colors.black),
+                                              ),
+                                            );
+                                          }).toList(),
+                                          underline: SizedBox(),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          dropdownColor: isDark
+                                              ? Color(0xFF2A2A2A)
+                                              : Colors.white,
                                         );
-                                      }).toList(),
-                                      underline: SizedBox(),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      dropdownColor: isDark
-                                          ? Color(0xFF2A2A2A)
-                                          : Colors.white,
+                                      },
                                     ),
                                   ),
                                   IconButton(

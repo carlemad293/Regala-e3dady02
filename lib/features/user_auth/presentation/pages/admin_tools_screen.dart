@@ -52,12 +52,13 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
   void initState() {
     super.initState();
     _tabController =
-        TabController(length: 7, vsync: this); // Increase tab count by 1
+        TabController(length: 7, vsync: this); // Remove notifications tab
     _loadResources();
     _loadEvents();
     _loadFixers();
     _loadPsalmContent();
     _loadVersionControl();
+    // _loadRegisteredUsers(); // Removed, no longer needed
   }
 
   @override

@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:regala_e3dady/features/app/splash_screen/splash_screen.dart';
+import 'package:regala_e3dady/features/app/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:regala_e3dady/features/app/theme/theme_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,15 +15,23 @@ import 'package:google_fonts/google_fonts.dart';
 // Background message handler function
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyDGKsJEnyO4GSLA2GDi-Hi2wbl68T0a0xo',
-      appId: '1:697018854717:web:9d42721dc27e8966396954',
-      messagingSenderId: '697018854717',
-      projectId: 'dma-app-a8112',
-      storageBucket: "dma-app-a8112.appspot.com",
-    ),
-  );
+  try {
+    // Check if Firebase is already initialized
+    Firebase.app();
+    print("Firebase already initialized in background handler");
+  } catch (e) {
+    // Initialize Firebase only if not already initialized
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyDGKsJEnyO4GSLA2GDi-Hi2wbl68T0a0xo',
+        appId: '1:697018854717:web:9d42721dc27e8966396954',
+        messagingSenderId: '697018854717',
+        projectId: 'dma-app-a8112',
+        storageBucket: "dma-app-a8112.appspot.com",
+      ),
+    );
+    print("Firebase initialized in background handler");
+  }
   print("Handling a background message: ${message.messageId}");
 }
 
@@ -78,6 +87,14 @@ void main() async {
 
   // Initialize Firebase
   await initializeFirebase();
+
+  // Initialize Notification Service
+  try {
+    await NotificationService().initialize();
+    print('Notification service initialized successfully');
+  } catch (e) {
+    print('Failed to initialize notification service: $e');
+  }
 
   runApp(
     ChangeNotifierProvider(

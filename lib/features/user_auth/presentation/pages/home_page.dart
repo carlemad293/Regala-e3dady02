@@ -444,6 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         snapshot.data != null &&
                         snapshot.data!.exists) {
                       return FloatingActionButton(
+                        heroTag: 'adminFAB',
                         backgroundColor: isDark
                             ? Colors.black.withOpacity(0.5)
                             : Colors.black.withOpacity(0.4),
@@ -468,6 +469,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: FloatingActionButton(
+                heroTag: 'helpFAB',
                 backgroundColor: isDark
                     ? Colors.black.withOpacity(0.5)
                     : Colors.black.withOpacity(0.4),

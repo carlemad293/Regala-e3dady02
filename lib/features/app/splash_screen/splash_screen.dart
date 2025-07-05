@@ -9,6 +9,7 @@ import 'package:regala_e3dady/features/user_auth/presentation/pages/login_page.d
 import 'package:regala_e3dady/features/user_auth/presentation/pages/home_page.dart';
 import 'package:regala_e3dady/features/app/version_check_service.dart';
 import 'package:regala_e3dady/features/app/version_update_dialog.dart';
+import 'package:regala_e3dady/features/app/notification_service.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SplashScreen extends StatefulWidget {
@@ -190,6 +191,22 @@ class _SplashScreenState extends State<SplashScreen>
             if (userDoc.exists) {
               final userData = userDoc.data() as Map<String, dynamic>;
               final points = userData['points'] ?? 0;
+
+              // Initialize notifications for logged-in user
+              try {
+                await NotificationService().initialize();
+                print(
+                    'Notification service initialized for user: ${userCredential.user!.email}');
+              } catch (e) {
+                print('Failed to initialize notification service: $e');
+              }
+              try {
+                await NotificationService().initialize();
+                print(
+                    'Notification service initialized for user: ${userCredential.user!.email}');
+              } catch (e) {
+                print('Failed to initialize notification service: $e');
+              }
 
               // Optimized: Reduced from 5 seconds to 2.5 seconds
               await Future.delayed(const Duration(milliseconds: 2500));

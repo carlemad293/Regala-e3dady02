@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_page.dart';
+import '../../../app/notification_service.dart';
 
 class SignInScreen extends StatefulWidget {
   static Future<bool> isUserLoggedIn() async {
@@ -134,6 +135,7 @@ class _SignInScreenState extends State<SignInScreen> {
             .doc(userCredential.user!.email);
         await userDoc.set({
           'name': _nameController.text.trim(),
+          'email': userCredential.user!.email,
         }, SetOptions(merge: true));
 
         // Save credentials securely
@@ -148,6 +150,10 @@ class _SignInScreenState extends State<SignInScreen> {
           _emailController.text.trim(),
           _passwordController.text,
         );
+
+        // Save notification token for the user
+        final notificationService = NotificationService();
+        await notificationService.savePendingToken();
 
         // Get the updated user data
         final userSnapshot = await userDoc.get();

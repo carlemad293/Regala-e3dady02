@@ -8,6 +8,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'models/app_drawer.dart';
 import 'dart:convert';
 import 'login_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PointsHistory {
   final int points;
@@ -317,22 +318,22 @@ class _AccountScreenPageState extends State<AccountScreen>
       context: context,
       backgroundColor: isDark ? Color(0xFF303030) : Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) => Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'Profile Picture',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
                 color: isDark ? Colors.white : Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.h),
             ListTile(
               leading: Icon(Icons.photo_library, color: Colors.blueAccent),
               title: Text('Choose from gallery'),
@@ -351,7 +352,7 @@ class _AccountScreenPageState extends State<AccountScreen>
                   _removeProfileImage();
                 },
               ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.h),
           ],
         ),
       ),
@@ -376,7 +377,7 @@ class _AccountScreenPageState extends State<AccountScreen>
         children: [
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -385,10 +386,10 @@ class _AccountScreenPageState extends State<AccountScreen>
                     elevation: 6,
                     color: isDark ? Color(0xFF2A2A2A) : Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24)),
+                        borderRadius: BorderRadius.circular(24.r)),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24.0, vertical: 32.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 24.w, vertical: 32.h),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -405,34 +406,34 @@ class _AccountScreenPageState extends State<AccountScreen>
                                       BoxShadow(
                                         color: Colors.black
                                             .withValues(alpha: 0.15),
-                                        blurRadius: 20,
-                                        spreadRadius: 5,
-                                        offset: Offset(0, 8),
+                                        blurRadius: 20.r,
+                                        spreadRadius: 5.r,
+                                        offset: Offset(0, 8.h),
                                       ),
                                       BoxShadow(
                                         color:
                                             Colors.black.withValues(alpha: 0.1),
-                                        blurRadius: 10,
-                                        spreadRadius: 2,
-                                        offset: Offset(0, 4),
+                                        blurRadius: 10.r,
+                                        spreadRadius: 2.r,
+                                        offset: Offset(0, 4.h),
                                       ),
                                       BoxShadow(
                                         color: Colors.blueAccent
                                             .withValues(alpha: 0.2),
-                                        blurRadius: 15,
-                                        spreadRadius: 3,
+                                        blurRadius: 15.r,
+                                        spreadRadius: 3.r,
                                         offset: Offset(0, 0),
                                       ),
                                     ],
                                     border: Border.all(
-                                        color: Colors.blueAccent, width: 3),
+                                        color: Colors.blueAccent, width: 3.w),
                                   ),
                                   child: FutureBuilder<void>(
                                     future: _loadUserData(),
                                     builder: (context, snapshot) {
                                       if (_isLoadingImage) {
                                         return CircleAvatar(
-                                          radius: 70,
+                                          radius: 70.r,
                                           backgroundColor: isDark
                                               ? Color(0xFF3A3A3A)
                                               : Colors.white,
@@ -451,7 +452,7 @@ class _AccountScreenPageState extends State<AccountScreen>
                                             }
                                           },
                                           child: CircleAvatar(
-                                            radius: 70,
+                                            radius: 70.r,
                                             backgroundColor: isDark
                                                 ? Color(0xFF3A3A3A)
                                                 : Colors.white,
@@ -485,57 +486,62 @@ class _AccountScreenPageState extends State<AccountScreen>
                                           ),
                                         ],
                                       ),
-                                      padding: EdgeInsets.all(10),
+                                      padding: EdgeInsets.all(10.w),
                                       child: Icon(Icons.edit,
-                                          color: Colors.white, size: 22),
+                                          color: Colors.white, size: 22.sp),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(height: 28),
+                          SizedBox(height: 28.h),
                           TextField(
                             controller: _nameController,
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black),
+                                color: isDark ? Colors.white : Colors.black,
+                                fontSize: 16.sp),
                             decoration: InputDecoration(
                               labelText: 'Name',
                               labelStyle: TextStyle(
                                   color:
-                                      isDark ? Colors.white70 : Colors.black87),
+                                      isDark ? Colors.white70 : Colors.black87,
+                                  fontSize: 16.sp),
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
+                                  borderRadius: BorderRadius.circular(12.r)),
                               prefixIcon: Icon(Icons.person_outline,
                                   color:
-                                      isDark ? Colors.white70 : Colors.black87),
+                                      isDark ? Colors.white70 : Colors.black87,
+                                  size: 20.sp),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                                 borderSide: BorderSide(
                                     color: isDark
                                         ? Colors.grey[700]!
-                                        : Colors.grey),
+                                        : Colors.grey,
+                                    width: 1.w),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                                 borderSide: BorderSide(
                                     color: isDark
                                         ? Colors.blue[300]!
-                                        : Colors.blue),
+                                        : Colors.blue,
+                                    width: 2.w),
                               ),
                             ),
                           ),
-                          SizedBox(height: 14),
+                          SizedBox(height: 14.h),
                           Text(
                             widget.user.email ?? 'No email',
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 15.sp,
                               color:
                                   isDark ? Colors.grey[400] : Colors.grey[700],
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 22),
+                          SizedBox(height: 22.h),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
@@ -544,10 +550,11 @@ class _AccountScreenPageState extends State<AccountScreen>
                                 backgroundColor: Colors.blueAccent,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                padding: EdgeInsets.symmetric(vertical: 14),
+                                    borderRadius: BorderRadius.circular(12.r)),
+                                padding: EdgeInsets.symmetric(vertical: 14.h),
                                 textStyle: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold),
                               ),
                               onPressed: () async {
                                 await _saveUserData();
@@ -556,7 +563,7 @@ class _AccountScreenPageState extends State<AccountScreen>
                               label: Text('Save'),
                             ),
                           ),
-                          SizedBox(height: 36),
+                          SizedBox(height: 36.h),
                           GestureDetector(
                             onTap: () {
                               setState(() {
@@ -570,7 +577,7 @@ class _AccountScreenPageState extends State<AccountScreen>
                                 AnimatedDefaultTextStyle(
                                   duration: Duration(milliseconds: 300),
                                   style: TextStyle(
-                                    fontSize: 26,
+                                    fontSize: 26.sp,
                                     fontWeight: FontWeight.bold,
                                     color:
                                         isDark ? Colors.red[300] : Colors.red,
@@ -590,20 +597,20 @@ class _AccountScreenPageState extends State<AccountScreen>
                                           scale: value,
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 6,
+                                              horizontal: 8.w,
+                                              vertical: 6.h,
                                             ),
                                             decoration: BoxDecoration(
                                               color: Colors.green
                                                   .withValues(alpha: 0.3),
                                               borderRadius:
-                                                  BorderRadius.circular(20),
+                                                  BorderRadius.circular(20.r),
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.green
                                                       .withValues(alpha: 0.3),
-                                                  blurRadius: 8,
-                                                  spreadRadius: 2,
+                                                  blurRadius: 8.r,
+                                                  spreadRadius: 2.r,
                                                 ),
                                               ],
                                             ),
@@ -613,14 +620,14 @@ class _AccountScreenPageState extends State<AccountScreen>
                                                 Icon(
                                                   Icons.arrow_upward,
                                                   color: Colors.white,
-                                                  size: 16,
+                                                  size: 16.sp,
                                                 ),
-                                                SizedBox(width: 4),
+                                                SizedBox(width: 4.w),
                                                 Text(
                                                   '$_points',
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14,
+                                                    fontSize: 14.sp,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
@@ -638,7 +645,7 @@ class _AccountScreenPageState extends State<AccountScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   // Add Points Progress Card
                   PointsProgressCard(
                     pointsHistory: _pointsHistory,
@@ -655,8 +662,8 @@ class _AccountScreenPageState extends State<AccountScreen>
               child: Material(
                 color: Colors.transparent,
                 child: Container(
-                  margin: EdgeInsets.all(16),
-                  padding: EdgeInsets.all(16),
+                  margin: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
                     color: _isMessageError
                         ? (isDark
@@ -669,7 +676,7 @@ class _AccountScreenPageState extends State<AccountScreen>
                             : (isDark
                                 ? Colors.green[900]!.withValues(alpha: 0.9)
                                 : Colors.green.shade50),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
                       color: _isMessageError
                           ? (isDark ? Colors.red[700]! : Colors.red.shade200)
@@ -684,16 +691,16 @@ class _AccountScreenPageState extends State<AccountScreen>
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 10,
+                        blurRadius: 10.r,
                         spreadRadius: 0,
-                        offset: Offset(0, 2),
+                        offset: Offset(0, 2.h),
                       ),
                     ],
                   ),
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8.w),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
@@ -709,10 +716,10 @@ class _AccountScreenPageState extends State<AccountScreen>
                               : _isMessageWarning
                                   ? (isDark ? Colors.amber[300] : Colors.amber)
                                   : (isDark ? Colors.green[300] : Colors.green),
-                          size: 24,
+                          size: 24.sp,
                         ),
                       ),
-                      SizedBox(width: 12),
+                      SizedBox(width: 12.w),
                       Expanded(
                         child: Text(
                           _message,
@@ -726,7 +733,7 @@ class _AccountScreenPageState extends State<AccountScreen>
                                     : (isDark
                                         ? Colors.green[300]
                                         : Colors.green.shade900),
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -739,18 +746,19 @@ class _AccountScreenPageState extends State<AccountScreen>
         ],
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.w),
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
-            icon: Icon(Icons.logout),
+            icon: Icon(Icons.logout, size: 20.sp),
             style: ElevatedButton.styleFrom(
               backgroundColor: isDark ? Colors.red[900] : Colors.red[200],
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              padding: EdgeInsets.symmetric(vertical: 14),
-              textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  borderRadius: BorderRadius.circular(12.r)),
+              padding: EdgeInsets.symmetric(vertical: 14.h),
+              textStyle:
+                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               try {

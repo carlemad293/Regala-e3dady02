@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:file_saver/file_saver.dart';
 import 'dart:convert';
 import 'admin_export_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'models/activity.dart';
 
@@ -203,9 +204,9 @@ class _AdminUniversalPointsScreenState
                             child: Text(
                               'Cancel',
                               style: TextStyle(
-                                  color: _isDark
-                                      ? Colors.white70
-                                      : Colors.black87),
+                                  color:
+                                      _isDark ? Colors.white70 : Colors.black87,
+                                  fontSize: 16.sp),
                             ),
                           ),
                           TextButton(
@@ -214,7 +215,8 @@ class _AdminUniversalPointsScreenState
                               'Confirm',
                               style: TextStyle(
                                   color:
-                                      _isDark ? Colors.blue[300] : Colors.blue),
+                                      _isDark ? Colors.blue[300] : Colors.blue,
+                                  fontSize: 16.sp),
                             ),
                           ),
                         ],
@@ -254,7 +256,8 @@ class _AdminUniversalPointsScreenState
               },
               child: Text('Update',
                   style: TextStyle(
-                      color: _isDark ? Colors.blue[300] : Colors.blue)),
+                      color: _isDark ? Colors.blue[300] : Colors.blue,
+                      fontSize: 16.sp)),
             ),
           ],
         );

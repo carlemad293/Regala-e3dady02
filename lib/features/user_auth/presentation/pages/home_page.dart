@@ -10,6 +10,7 @@ import 'dart:ui'; // Add ImageFilter import
 import 'dart:convert'; // Add jsonEncode import
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'account_page.dart';
 import 'help_page.dart';
@@ -106,7 +107,11 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: isDark ? Colors.white : Colors.white),
+            icon: Icon(
+              Icons.menu,
+              color: isDark ? Colors.white : Colors.white,
+              size: 24.sp,
+            ),
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
@@ -114,8 +119,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person_outline,
-                color: isDark ? Colors.white : Colors.white),
+            icon: Icon(
+              Icons.person_outline,
+              color: isDark ? Colors.white : Colors.white,
+              size: 24.sp,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -146,36 +154,36 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: 100),
+              padding: EdgeInsets.only(top: 100.h),
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    padding: EdgeInsets.only(left: 16.w, right: 16.w),
                     child: Row(
                       children: [
                         Container(
-                          width: 12,
-                          height: 12,
+                          width: 12.w,
+                          height: 12.h,
                           decoration: BoxDecoration(
                             color: Colors.green,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.green.withOpacity(0.5),
-                                blurRadius: 8,
-                                spreadRadius: 2,
+                                blurRadius: 8.r,
+                                spreadRadius: 2.r,
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(width: 8),
+                        SizedBox(width: 8.w),
                         AnimatedOpacity(
                           duration: Duration(milliseconds: 300),
                           opacity: _isLoading ? 0.0 : 1.0,
                           child: Text(
                             'Hello, $_userName',
                             style: GoogleFonts.poppins(
-                              fontSize: 24,
+                              fontSize: 24.sp,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -184,30 +192,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Container(
-                    width: 200,
-                    height: 2,
+                    width: 200.w,
+                    height: 2.h,
                     color: isDark
                         ? Colors.white.withOpacity(0.3)
                         : Colors.white.withOpacity(0.3),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.9,
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16.w),
                     child: InkWell(
                       onTap: () {
                         _showAnnouncementsDialog(context);
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: isDark
                               ? Colors.blue[900]!.withOpacity(0.3)
                               : Colors.blue.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -216,13 +224,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               Icons.notifications,
                               color:
                                   isDark ? Colors.blue[200] : Colors.blue[700],
-                              size: 24,
+                              size: 24.sp,
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             Text(
                               'View Announcements',
                               style: GoogleFonts.poppins(
-                                fontSize: 16,
+                                fontSize: 16.sp,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -251,17 +259,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                 if (unreadCount > 0) {
                                   return Container(
-                                    margin: EdgeInsets.only(left: 8),
+                                    margin: EdgeInsets.only(left: 8.w),
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                        horizontal: 8.w, vertical: 4.h),
                                     decoration: BoxDecoration(
                                       color: Colors.red,
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(12.r),
                                     ),
                                     child: Text(
                                       '$unreadCount New',
                                       style: GoogleFonts.poppins(
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -278,18 +286,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     color: isDark
                         ? Color(0xFF2A2A2A).withOpacity(0.2)
                         : Colors.white.withOpacity(0.2),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.9,
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.w),
                       child: Column(
                         children: [
                           Row(
@@ -298,59 +306,59 @@ class _HomeScreenState extends State<HomeScreen> {
                               Icon(
                                 Icons.calendar_today,
                                 color: isDark ? Colors.white : Colors.white,
-                                size: 20,
+                                size: 20.sp,
                               ),
-                              SizedBox(width: 8),
+                              SizedBox(width: 8.w),
                               Text(
                                 'Today\'s Date',
                                 style: GoogleFonts.poppins(
-                                  fontSize: 18,
+                                  fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 8.h),
                           Text(
                             DateFormat('EEEE, MMMM d, yyyy')
                                 .format(DateTime.now()),
                             style: GoogleFonts.poppins(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: 4.h),
                           CopticDateWidget(),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   TodayEventsCard(),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     color: isDark
                         ? Color(0xFF2A2A2A).withOpacity(0.2)
                         : Colors.white.withOpacity(0.2),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.9,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.w, vertical: 15.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             IconButton(
                               icon: Icon(Icons.drive_file_move,
                                   color: isDark ? Colors.white : Colors.white,
-                                  size: 28),
+                                  size: 28.sp),
                               onPressed: () async {
                                 String googleDriveLink =
                                     await _getGoogleDriveLink();
@@ -362,8 +370,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                             Container(
-                              width: 1,
-                              height: 24,
+                              width: 1.w,
+                              height: 24.h,
                               color: isDark
                                   ? Colors.white.withOpacity(0.5)
                                   : Colors.white.withOpacity(0.5),
@@ -371,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             IconButton(
                               icon: Icon(Icons.stars,
                                   color: isDark ? Colors.white : Colors.white,
-                                  size: 28),
+                                  size: 28.sp),
                               onPressed: () async {
                                 bool isAdmin = await _checkIfAdmin(
                                     widget.user.email ?? '');
@@ -383,8 +391,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                             Container(
-                              width: 1,
-                              height: 24,
+                              width: 1.w,
+                              height: 24.h,
                               color: isDark
                                   ? Colors.white.withOpacity(0.5)
                                   : Colors.white.withOpacity(0.5),
@@ -392,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             IconButton(
                               icon: Icon(Icons.sports_esports,
                                   color: isDark ? Colors.white : Colors.white,
-                                  size: 28),
+                                  size: 28.sp),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -402,8 +410,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                             Container(
-                              width: 1,
-                              height: 24,
+                              width: 1.w,
+                              height: 24.h,
                               color: isDark
                                   ? Colors.white.withOpacity(0.5)
                                   : Colors.white.withOpacity(0.5),
@@ -411,7 +419,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             IconButton(
                               icon: Icon(Icons.sports_soccer,
                                   color: isDark ? Colors.white : Colors.white,
-                                  size: 28),
+                                  size: 28.sp),
                               onPressed: () {
                                 _showPsalmDialog(context);
                               },
@@ -499,26 +507,27 @@ class _HomeScreenState extends State<HomeScreen> {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       color: isDark
           ? Color(0xFF2A2A2A).withOpacity(0.2)
           : Colors.white.withOpacity(0.2),
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         child: Container(
-          width: 200,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          width: 200.w,
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: isDark ? Colors.white : Colors.white, size: 28),
-              SizedBox(width: 10),
+              Icon(icon,
+                  color: isDark ? Colors.white : Colors.white, size: 28.sp),
+              SizedBox(width: 10.w),
               Text(
                 label,
                 style: GoogleFonts.poppins(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white : Colors.white,
                 ),
@@ -580,19 +589,19 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          insetPadding:
-              EdgeInsets.symmetric(horizontal: 20, vertical: 24), // 90% width
+          insetPadding: EdgeInsets.symmetric(
+              horizontal: 20.w, vertical: 24.h), // 90% width
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 18.0, sigmaY: 18.0),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.90,
                 constraints: BoxConstraints(
-                  maxWidth: 600,
+                  maxWidth: 600.w,
                 ),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(24.r),
                   border: Border.all(
                     color: isDark
                         ? Colors.white.withOpacity(0.18)
@@ -617,14 +626,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     // Header
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 24.w, vertical: 18.h),
                       decoration: BoxDecoration(
                         color: isDark
                             ? Colors.blue[900]!.withOpacity(0.3)
                             : Colors.blue.withOpacity(0.1),
                         borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(24)),
+                            BorderRadius.vertical(top: Radius.circular(24.r)),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -637,7 +646,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: isDark
                                       ? Colors.blue[200]
                                       : Colors.blue[700],
-                                  size: 24,
+                                  size: 24.sp,
                                 ),
                                 onPressed: null, // Decorative, no action
                                 splashColor: Colors.transparent,
@@ -646,11 +655,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ? Colors.blue[200]
                                     : Colors.blue[700],
                               ),
-                              SizedBox(width: 12),
+                              SizedBox(width: 12.w),
                               Text(
                                 'Announcements',
                                 style: GoogleFonts.poppins(
-                                  fontSize: 22,
+                                  fontSize: 22.sp,
                                   fontWeight: FontWeight.bold,
                                   color: isDark ? Colors.white : Colors.black87,
                                 ),
@@ -678,7 +687,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Text(
                             'Error loading announcements',
                             style: GoogleFonts.poppins(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               color: isDark ? Colors.white : Colors.black87,
                             ),
                           ));
@@ -696,20 +705,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                           return Center(
                             child: Padding(
-                              padding: EdgeInsets.all(24),
+                              padding: EdgeInsets.all(24.w),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(Icons.notifications_off,
-                                      size: 48,
+                                      size: 48.sp,
                                       color: isDark
                                           ? Colors.white54
                                           : Colors.black38),
-                                  SizedBox(height: 16),
+                                  SizedBox(height: 16.h),
                                   Text(
                                     'No announcements yet',
                                     style: GoogleFonts.poppins(
-                                      fontSize: 16,
+                                      fontSize: 16.sp,
                                       color: isDark
                                           ? Colors.white54
                                           : Colors.black54,
@@ -723,8 +732,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                         return ListView.builder(
                           shrinkWrap: true,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 0.w, vertical: 16.h),
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             final doc = snapshot.data!.docs[index];
@@ -749,14 +758,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Container(
                               width: double.infinity,
                               margin: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 10),
+                                  horizontal: 16.w, vertical: 10.h),
                               child: Card(
                                 elevation: 10,
                                 color: isDark
                                     ? Colors.white.withOpacity(0.10)
                                     : Colors.white.withOpacity(0.85),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18),
+                                  borderRadius: BorderRadius.circular(18.r),
                                   side: BorderSide(
                                     color: isDark
                                         ? Colors.white.withOpacity(0.13)
@@ -767,8 +776,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Stack(
                                   children: [
                                     Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(20, 20, 20, 16),
+                                      padding: EdgeInsets.fromLTRB(
+                                          20.w, 20.h, 20.w, 16.h),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -781,7 +790,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Text(
                                                   data['title'] ?? '',
                                                   style: GoogleFonts.poppins(
-                                                    fontSize: 18,
+                                                    fontSize: 18.sp,
                                                     fontWeight: FontWeight.bold,
                                                     color: isDark
                                                         ? Colors.white
@@ -795,11 +804,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 10),
+                                          SizedBox(height: 10.h),
                                           Text(
                                             data['content'] ?? '',
                                             style: GoogleFonts.poppins(
-                                              fontSize: 15,
+                                              fontSize: 15.sp,
                                               color: isDark
                                                   ? Colors.white70
                                                   : Colors.black87,
@@ -810,12 +819,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ? TextAlign.right
                                                 : TextAlign.justify,
                                           ),
-                                          SizedBox(height: 14),
+                                          SizedBox(height: 14.h),
                                           Text(
                                             DateFormat('MMM d, yyyy • h:mm a')
                                                 .format(timestamp),
                                             style: GoogleFonts.poppins(
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               color: isDark
                                                   ? Colors.white38
                                                   : Colors.black54,
@@ -827,28 +836,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     if (isUnread)
                                       Positioned(
-                                        top: 14,
-                                        right: 14,
+                                        top: 14.h,
+                                        right: 14.w,
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 6),
+                                              horizontal: 12.w, vertical: 6.h),
                                           decoration: BoxDecoration(
                                             color: Colors.red,
                                             borderRadius:
-                                                BorderRadius.circular(20),
+                                                BorderRadius.circular(20.r),
                                             boxShadow: [
                                               BoxShadow(
                                                 color:
                                                     Colors.red.withOpacity(0.3),
-                                                blurRadius: 8,
-                                                spreadRadius: 2,
+                                                blurRadius: 8.r,
+                                                spreadRadius: 2.r,
                                               ),
                                             ],
                                           ),
                                           child: Text(
                                             'New',
                                             style: GoogleFonts.poppins(
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -925,18 +934,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Dialog(
                   backgroundColor: Colors.transparent,
                   insetPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(24.r),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 18.0, sigmaY: 18.0),
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.90,
                         constraints: BoxConstraints(
-                          maxWidth: 600,
+                          maxWidth: 600.w,
                         ),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(24.r),
                           border: Border.all(
                             color: isDark
                                 ? Colors.white.withOpacity(0.18)
@@ -962,13 +971,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             // Header
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 18),
+                                  horizontal: 24.w, vertical: 18.h),
                               decoration: BoxDecoration(
                                 color: isDark
                                     ? Colors.green[900]!.withOpacity(0.18)
                                     : Colors.green.withOpacity(0.12),
                                 borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(24)),
+                                    top: Radius.circular(24.r)),
                               ),
                               child: Row(
                                 mainAxisAlignment:
@@ -981,13 +990,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: isDark
                                             ? Colors.green[300]
                                             : Colors.green[700],
-                                        size: 24,
+                                        size: 24.sp,
                                       ),
-                                      SizedBox(width: 12),
+                                      SizedBox(width: 12.w),
                                       Text(
                                         'Psalm',
                                         style: GoogleFonts.poppins(
-                                            fontSize: 22,
+                                            fontSize: 22.sp,
                                             fontWeight: FontWeight.bold,
                                             color: isDark
                                                 ? Colors.white
@@ -1009,7 +1018,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             // Content
                             Flexible(
                               child: SingleChildScrollView(
-                                padding: EdgeInsets.all(24),
+                                padding: EdgeInsets.all(24.w),
                                 child: hasContent
                                     ? Column(
                                         crossAxisAlignment:
@@ -1021,7 +1030,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Text(
                                               title,
                                               style: GoogleFonts.poppins(
-                                                fontSize: 26,
+                                                fontSize: 26.sp,
                                                 fontWeight: FontWeight.bold,
                                                 color: isDark
                                                     ? Colors.white
@@ -1033,15 +1042,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : TextAlign.left,
                                             ),
                                           ),
-                                          SizedBox(height: 20),
+                                          SizedBox(height: 20.h),
                                           // Separator
                                           Container(
-                                            height: 1,
+                                            height: 1.h,
                                             color: isDark
                                                 ? Colors.white.withOpacity(0.2)
                                                 : Colors.black.withOpacity(0.1),
                                           ),
-                                          SizedBox(height: 24),
+                                          SizedBox(height: 24.h),
                                           // Content
                                           Text(
                                             content,
@@ -1066,27 +1075,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Icon(
                                               Icons.book_outlined,
-                                              size: 64,
+                                              size: 64.sp,
                                               color: isDark
                                                   ? Colors.white54
                                                   : Colors.black38,
                                             ),
-                                            SizedBox(height: 16),
+                                            SizedBox(height: 16.h),
                                             Text(
                                               'No psalm yet',
                                               style: GoogleFonts.poppins(
-                                                fontSize: 20,
+                                                fontSize: 20.sp,
                                                 fontWeight: FontWeight.w500,
                                                 color: isDark
                                                     ? Colors.white54
                                                     : Colors.black54,
                                               ),
                                             ),
-                                            SizedBox(height: 8),
+                                            SizedBox(height: 8.h),
                                             Text(
                                               'Check back later for updates',
                                               style: GoogleFonts.poppins(
-                                                fontSize: 14,
+                                                fontSize: 14.sp,
                                                 color: isDark
                                                     ? Colors.white38
                                                     : Colors.black38,
@@ -1100,13 +1109,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             // Fixed Control Bar
                             if (hasContent)
                               Container(
-                                padding: EdgeInsets.all(24),
+                                padding: EdgeInsets.all(24.w),
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? Colors.green[900]!.withOpacity(0.18)
                                       : Colors.green.withOpacity(0.12),
                                   borderRadius: BorderRadius.vertical(
-                                      bottom: Radius.circular(24)),
+                                      bottom: Radius.circular(24.r)),
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -1122,7 +1131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             color: isDark
                                                 ? Colors.blue[300]
                                                 : Colors.blue[600],
-                                            size: 20,
+                                            size: 20.sp,
                                           ),
                                           onPressed: () async {
                                             if (psalmFontSize > 12) {
@@ -1147,18 +1156,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                         SizedBox(width: 8),
                                         Container(
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 8),
+                                              horizontal: 12.w, vertical: 8.h),
                                           decoration: BoxDecoration(
                                             color: isDark
                                                 ? Colors.grey[800]
                                                 : Colors.grey[100],
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                                BorderRadius.circular(8.r),
                                           ),
                                           child: Text(
                                             '${psalmFontSize.round()}',
                                             style: GoogleFonts.poppins(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
                                               color: isDark
                                                   ? Colors.white
@@ -1166,14 +1175,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 8),
+                                        SizedBox(width: 8.w),
                                         IconButton(
                                           icon: Icon(
                                             Icons.add,
                                             color: isDark
                                                 ? Colors.blue[300]
                                                 : Colors.blue[600],
-                                            size: 20,
+                                            size: 20.sp,
                                           ),
                                           onPressed: () async {
                                             if (psalmFontSize < 32) {

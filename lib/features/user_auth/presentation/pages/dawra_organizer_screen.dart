@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/app_drawer.dart';
 import 'package:confetti/confetti.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DawraOrganizerScreen extends StatefulWidget {
   @override

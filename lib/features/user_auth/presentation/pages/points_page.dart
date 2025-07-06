@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'admin_page.dart';
 import 'models/activity.dart';
@@ -278,8 +279,8 @@ class _PointScreenState extends State<PointScreen> {
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon:
-                Icon(Icons.menu, color: isDark ? Colors.white : Colors.black87),
+            icon: Icon(Icons.menu,
+                color: isDark ? Colors.white : Colors.black87, size: 24.sp),
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
@@ -288,7 +289,7 @@ class _PointScreenState extends State<PointScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.person_outline,
-                color: isDark ? Colors.white : Colors.black87),
+                color: isDark ? Colors.white : Colors.black87, size: 24.sp),
             onPressed: () {
               if (user != null) {
                 Navigator.push(
@@ -325,7 +326,7 @@ class _PointScreenState extends State<PointScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 100), // Add space for app bar
+                SizedBox(height: 100.h), // Add space for app bar
                 // Top Users Card
                 widget.isAdmin
                     ? Dismissible(
@@ -348,7 +349,7 @@ class _PointScreenState extends State<PointScreen> {
                             final showPoints = snapshot.data ?? true;
                             return Container(
                               alignment: Alignment.centerLeft,
-                              padding: EdgeInsets.only(left: 20.0),
+                              padding: EdgeInsets.only(left: 20.w),
                               color: Colors.blue.withOpacity(0.2),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -358,9 +359,9 @@ class _PointScreenState extends State<PointScreen> {
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 1,
-                                      blurRadius: 4,
-                                      offset: Offset(0, 2),
+                                      spreadRadius: 1.r,
+                                      blurRadius: 4.r,
+                                      offset: Offset(0, 2.h),
                                     ),
                                   ],
                                 ),
@@ -369,7 +370,7 @@ class _PointScreenState extends State<PointScreen> {
                                       ? Icons.visibility_off
                                       : Icons.visibility,
                                   color: Colors.blue,
-                                  size: 32,
+                                  size: 32.sp,
                                 ),
                               ),
                             );
@@ -391,7 +392,7 @@ class _PointScreenState extends State<PointScreen> {
                           return _buildPodiumCard(context, isDark, showPoints);
                         },
                       ),
-                SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 // Existing Card
                 Center(
                   child: Card(
@@ -400,12 +401,12 @@ class _PointScreenState extends State<PointScreen> {
                         ? (isDark ? Color(0xFF3A1A1A) : Color(0xFFFFEBEE))
                         : (isDark ? Color(0xFF2A2A2A) : Colors.white),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(24.r),
                       side: _isUserBlocked
                           ? BorderSide(
                               color:
                                   isDark ? Colors.red[700]! : Colors.red[300]!,
-                              width: 2,
+                              width: 2.w,
                             )
                           : BorderSide.none,
                     ),
@@ -417,12 +418,12 @@ class _PointScreenState extends State<PointScreen> {
                             right: 0,
                             child: Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
+                                  horizontal: 12.w, vertical: 6.h),
                               decoration: BoxDecoration(
                                 color: isDark ? Colors.red[900] : Colors.red,
                                 borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(24),
-                                  bottomLeft: Radius.circular(24),
+                                  topRight: Radius.circular(24.r),
+                                  bottomLeft: Radius.circular(24.r),
                                 ),
                               ),
                               child: Row(
@@ -431,14 +432,14 @@ class _PointScreenState extends State<PointScreen> {
                                   Icon(
                                     Icons.block,
                                     color: Colors.white,
-                                    size: 16,
+                                    size: 16.sp,
                                   ),
-                                  SizedBox(width: 4),
+                                  SizedBox(width: 4.w),
                                   Text(
                                     'BLOCKED',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -447,19 +448,19 @@ class _PointScreenState extends State<PointScreen> {
                             ),
                           ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24.0, vertical: 32.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24.w, vertical: 32.h),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               if (_isUserBlocked) ...[
                                 Container(
-                                  padding: EdgeInsets.all(16),
+                                  padding: EdgeInsets.all(16.w),
                                   decoration: BoxDecoration(
                                     color: isDark
                                         ? Colors.red[900]
                                         : Colors.red[50],
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(12.r),
                                     border: Border.all(
                                       color: isDark
                                           ? Colors.red[700]!
@@ -473,8 +474,9 @@ class _PointScreenState extends State<PointScreen> {
                                         color: isDark
                                             ? Colors.red[300]
                                             : Colors.red,
+                                        size: 20.sp,
                                       ),
-                                      SizedBox(width: 12),
+                                      SizedBox(width: 12.w),
                                       Expanded(
                                         child: Text(
                                           'Your account has been blocked. Please contact an administrator for assistance.',
@@ -482,14 +484,14 @@ class _PointScreenState extends State<PointScreen> {
                                             color: isDark
                                                 ? Colors.red[300]
                                                 : Colors.red[900],
-                                            fontSize: 14,
+                                            fontSize: 14.sp,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                SizedBox(height: 20.h),
                               ],
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -596,55 +598,60 @@ class _PointScreenState extends State<PointScreen> {
                               if (_showCustomFields) ...[
                                 SizedBox(height: 20),
                                 Container(
-                                  width: 250,
+                                  width: 250.w,
                                   child: TextField(
                                     controller: _activityController,
                                     enabled: !_isUserBlocked,
                                     style: TextStyle(
                                         color: isDark
                                             ? Colors.white
-                                            : Colors.black),
+                                            : Colors.black,
+                                        fontSize: 16.sp),
                                     decoration: InputDecoration(
                                       labelText: 'Type your activity',
                                       labelStyle: TextStyle(
                                           color: isDark
                                               ? Colors.white70
-                                              : Colors.black87),
+                                              : Colors.black87,
+                                          fontSize: 16.sp),
                                       border: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
                                             color: isDark
                                                 ? Colors.grey[700]!
-                                                : Colors.grey),
+                                                : Colors.grey,
+                                            width: 1.w),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
                                             color: isDark
                                                 ? Colors.grey[700]!
-                                                : Colors.grey),
+                                                : Colors.grey,
+                                            width: 1.w),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
                                             color: isDark
                                                 ? Colors.blue[300]!
-                                                : Colors.blue),
+                                                : Colors.blue,
+                                            width: 2.w),
                                       ),
                                       errorBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        borderSide:
-                                            BorderSide(color: Colors.red),
+                                            BorderRadius.circular(12.r),
+                                        borderSide: BorderSide(
+                                            color: Colors.red, width: 1.w),
                                       ),
                                       focusedErrorBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        borderSide:
-                                            BorderSide(color: Colors.red),
+                                            BorderRadius.circular(12.r),
+                                        borderSide: BorderSide(
+                                            color: Colors.red, width: 2.w),
                                       ),
                                     ),
                                     onChanged: (value) {
@@ -657,16 +664,17 @@ class _PointScreenState extends State<PointScreen> {
                                     },
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                SizedBox(height: 20.h),
                                 Container(
-                                  width: 250,
+                                  width: 250.w,
                                   child: TextField(
                                     controller: _pointsController,
                                     enabled: !_isUserBlocked,
                                     style: TextStyle(
                                         color: isDark
                                             ? Colors.white
-                                            : Colors.black),
+                                            : Colors.black,
+                                        fontSize: 16.sp),
                                     keyboardType: TextInputType.number,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
@@ -676,42 +684,46 @@ class _PointScreenState extends State<PointScreen> {
                                       labelStyle: TextStyle(
                                           color: isDark
                                               ? Colors.white70
-                                              : Colors.black87),
+                                              : Colors.black87,
+                                          fontSize: 16.sp),
                                       border: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
                                             color: isDark
                                                 ? Colors.grey[700]!
-                                                : Colors.grey),
+                                                : Colors.grey,
+                                            width: 1.w),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
                                             color: isDark
                                                 ? Colors.grey[700]!
-                                                : Colors.grey),
+                                                : Colors.grey,
+                                            width: 1.w),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
+                                            BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
                                             color: isDark
                                                 ? Colors.blue[300]!
-                                                : Colors.blue),
+                                                : Colors.blue,
+                                            width: 2.w),
                                       ),
                                       errorBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        borderSide:
-                                            BorderSide(color: Colors.red),
+                                            BorderRadius.circular(12.r),
+                                        borderSide: BorderSide(
+                                            color: Colors.red, width: 1.w),
                                       ),
                                       focusedErrorBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        borderSide:
-                                            BorderSide(color: Colors.red),
+                                            BorderRadius.circular(12.r),
+                                        borderSide: BorderSide(
+                                            color: Colors.red, width: 2.w),
                                       ),
                                     ),
                                     onChanged: (value) {
@@ -725,11 +737,11 @@ class _PointScreenState extends State<PointScreen> {
                                   ),
                                 ),
                               ],
-                              SizedBox(height: 20),
+                              SizedBox(height: 20.h),
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
-                                  icon: Icon(Icons.send),
+                                  icon: Icon(Icons.send, size: 20.sp),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: _isUserBlocked
                                         ? (isDark
@@ -740,11 +752,12 @@ class _PointScreenState extends State<PointScreen> {
                                             : Colors.blueAccent),
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(12.r),
                                     ),
-                                    padding: EdgeInsets.symmetric(vertical: 14),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 14.h),
                                     textStyle: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 18.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -761,7 +774,7 @@ class _PointScreenState extends State<PointScreen> {
                   ),
                 ),
                 // Add extra padding at the bottom to account for the fixed admin button
-                if (widget.isAdmin) SizedBox(height: 80),
+                if (widget.isAdmin) SizedBox(height: 80.h),
               ],
             ),
           ),
@@ -772,7 +785,7 @@ class _PointScreenState extends State<PointScreen> {
               right: 0,
               bottom: 0,
               child: Container(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -794,7 +807,7 @@ class _PointScreenState extends State<PointScreen> {
                       backgroundColor: isDark ? Colors.blue[700] : Colors.blue,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                       padding:
                           EdgeInsets.symmetric(horizontal: 24, vertical: 12),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:regala_e3dady/features/app/theme/theme_provider.dart';
 import '../account_page.dart';
@@ -78,9 +79,9 @@ class _AppDrawerState extends State<AppDrawer> {
     final isDark = themeProvider.themeMode == ThemeMode.dark;
 
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topRight: Radius.circular(16),
-        bottomRight: Radius.circular(16),
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(16.r),
+        bottomRight: Radius.circular(16.r),
       ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -88,16 +89,16 @@ class _AppDrawerState extends State<AppDrawer> {
           backgroundColor: isDark
               ? Colors.black.withOpacity(0.3)
               : Colors.black.withOpacity(0.2),
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topRight: Radius.circular(16),
-              bottomRight: Radius.circular(16),
+              topRight: Radius.circular(16.r),
+              bottomRight: Radius.circular(16.r),
             ),
           ),
           child: Column(
             children: [
               SizedBox(
-                height: 250,
+                height: 250.h,
                 child: DrawerHeader(
                   decoration: BoxDecoration(
                     image: imageUrl != null
@@ -116,18 +117,18 @@ class _AppDrawerState extends State<AppDrawer> {
                   curve: Curves.easeInOut,
                   padding: EdgeInsets.zero,
                   margin: EdgeInsets.zero,
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
                       'Regala E3dady',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 25.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         shadows: [
                           Shadow(
-                            offset: Offset(2, 2),
-                            blurRadius: 25,
+                            offset: Offset(2.w, 2.h),
+                            blurRadius: 25.r,
                             color: Colors.white,
                           )
                         ],

@@ -40,6 +40,9 @@ class _AdminExportPageState extends State<AdminExportPage> {
           .collection('requests')
           .where('isApproved', isEqualTo: false)
           .get();
+      final tokensSnap =
+          await FirebaseFirestore.instance.collection('user_token').get();
+
       List<Map<String, dynamic>> users = [];
       for (var doc in usersSnap.docs) {
         final data = doc.data();
@@ -51,6 +54,21 @@ class _AdminExportPageState extends State<AdminExportPage> {
             adminsSnap.docs.any((a) => a.id == email) ? 'Admin' : 'User';
         final numRequests =
             requestsSnap.docs.where((r) => r['userEmail'] == email).length;
+
+        // Get user token
+        QueryDocumentSnapshot? userTokenDoc;
+        try {
+          userTokenDoc = tokensSnap.docs.firstWhere(
+            (tokenDoc) => tokenDoc.id == email,
+          );
+        } catch (e) {
+          userTokenDoc = null;
+        }
+        final tokenData = userTokenDoc?.data() as Map<String, dynamic>?;
+        final userToken = tokenData?['token'] ?? 'No token';
+        final tokenLastUpdate = tokenData?['lastTokenUpdate'];
+        final platform = tokenData?['platform'] ?? 'Unknown';
+
         users.add({
           'email': email,
           'name': name,
@@ -58,6 +76,9 @@ class _AdminExportPageState extends State<AdminExportPage> {
           'role': role,
           'blocked': blocked,
           'num_requests': numRequests,
+          'token': userToken,
+          'token_last_update': tokenLastUpdate,
+          'platform': platform,
         });
       }
       final now = DateTime.now();
@@ -67,6 +88,10 @@ class _AdminExportPageState extends State<AdminExportPage> {
         'total_admins': adminsSnap.size,
         'blocked_users': users.where((u) => u['blocked'] == true).length,
         'pending_requests': requestsSnap.size,
+        'users_with_tokens':
+            users.where((u) => u['token'] != 'No token').length,
+        'users_without_tokens':
+            users.where((u) => u['token'] == 'No token').length,
         'exported_at': dateTimeString,
       };
       final buffer = StringBuffer();
@@ -76,6 +101,8 @@ class _AdminExportPageState extends State<AdminExportPage> {
       buffer.writeln('Admins: ${stats['total_admins']}');
       buffer.writeln('Blocked users: ${stats['blocked_users']}');
       buffer.writeln('Pending requests: ${stats['pending_requests']}');
+      buffer.writeln('Users with tokens: ${stats['users_with_tokens']}');
+      buffer.writeln('Users without tokens: ${stats['users_without_tokens']}');
       buffer.writeln('');
       buffer.writeln('--- Users ---');
       for (var user in users) {
@@ -85,6 +112,15 @@ class _AdminExportPageState extends State<AdminExportPage> {
         buffer.writeln('Points: ${user['points']}');
         buffer.writeln('Blocked: ${user['blocked'] ? 'Yes' : 'No'}');
         buffer.writeln('Pending Requests: ${user['num_requests']}');
+        buffer.writeln('Token: ${user['token']}');
+        buffer.writeln('Platform: ${user['platform']}');
+        if (user['token_last_update'] != null) {
+          final lastUpdate = (user['token_last_update'] as Timestamp).toDate();
+          buffer.writeln(
+              'Token Last Update: ${DateFormat('MM/dd/yyyy hh:mm a').format(lastUpdate)}');
+        } else {
+          buffer.writeln('Token Last Update: Never');
+        }
         buffer.writeln('');
       }
       setState(() {
@@ -206,6 +242,12 @@ class _AdminExportPageState extends State<AdminExportPage> {
                         Text('Blocked users: ${_stats!['blocked_users']}',
                             style: TextStyle(color: textColor)),
                         Text('Pending requests: ${_stats!['pending_requests']}',
+                            style: TextStyle(color: textColor)),
+                        Text(
+                            'Users with tokens: ${_stats!['users_with_tokens']}',
+                            style: TextStyle(color: textColor)),
+                        Text(
+                            'Users without tokens: ${_stats!['users_without_tokens']}',
                             style: TextStyle(color: textColor)),
                         SizedBox(height: 16),
                       ],

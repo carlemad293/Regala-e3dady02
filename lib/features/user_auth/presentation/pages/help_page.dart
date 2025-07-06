@@ -7,7 +7,6 @@ import 'package:vibration/vibration.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth for user instance
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models/app_drawer.dart'; // Import the AppDrawer
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HelpScreen extends StatefulWidget {
   @override
@@ -181,7 +180,7 @@ class _HelpScreenState extends State<HelpScreen> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(20.w),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
               StreamBuilder<DocumentSnapshot>(
@@ -227,19 +226,19 @@ class _HelpScreenState extends State<HelpScreen> {
                   return Card(
                     color: isDark ? Color(0xFF2A2A2A) : Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r)),
+                        borderRadius: BorderRadius.circular(12)),
                     elevation: 5,
-                    margin: EdgeInsets.only(bottom: 20.h),
+                    margin: EdgeInsets.only(bottom: 20.0),
                     child: ListTile(
                       leading: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.push_pin, color: Colors.red),
-                          SizedBox(width: 8.w),
+                          SizedBox(width: 8),
                           CircleAvatar(
                             backgroundImage:
                                 AssetImage('assets/logo_el_group.png'),
-                            radius: 22.r,
+                            radius: 22,
                           ),
                         ],
                       ),
@@ -247,7 +246,7 @@ class _HelpScreenState extends State<HelpScreen> {
                         'رجالة اعدادي مارجرجس',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.sp,
+                            fontSize: 16,
                             color: isDark ? Colors.white : Colors.black),
                       ),
                       trailing: IconButton(
@@ -317,7 +316,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10.w),
+                  SizedBox(width: 10),
                   DropdownButton<String>(
                     value: sortBy,
                     dropdownColor: isDark ? Color(0xFF2A2A2A) : Colors.white,
@@ -339,7 +338,7 @@ class _HelpScreenState extends State<HelpScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 10),
               Expanded(
                 child: _isLoading
                     ? Center(
@@ -356,19 +355,19 @@ class _HelpScreenState extends State<HelpScreen> {
                               children: [
                                 Icon(
                                   Icons.people_outline,
-                                  size: 64.sp,
+                                  size: 64,
                                   color: isDark
                                       ? Colors.white70
                                       : Colors.blue.withOpacity(0.5),
                                 ),
-                                SizedBox(height: 16.h),
+                                SizedBox(height: 16),
                                 Text(
                                   'No fixers found',
                                   style: TextStyle(
                                     color: isDark
                                         ? Colors.white70
                                         : Colors.blue.withOpacity(0.7),
-                                    fontSize: 18.sp,
+                                    fontSize: 18,
                                   ),
                                 ),
                               ],

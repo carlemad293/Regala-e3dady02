@@ -11,7 +11,6 @@ import 'package:regala_e3dady/features/app/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:regala_e3dady/features/app/theme/theme_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Background message handler function
 @pragma('vm:entry-point')
@@ -168,18 +167,13 @@ class MyApp extends StatelessWidget {
       data: theme,
       duration: Duration(milliseconds: 350),
       curve: Curves.easeInOut,
-      child: ScreenUtilInit(
-        designSize: Size(375, 812), // iPhone X size, adjust as needed
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: "Regala e3dady",
-          themeMode: themeProvider.themeMode,
-          theme: theme,
-          darkTheme: theme,
-          home: SplashScreen(),
-        ),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Regala e3dady",
+        themeMode: themeProvider.themeMode,
+        theme: theme,
+        darkTheme: theme,
+        home: SplashScreen(),
       ),
     );
   }

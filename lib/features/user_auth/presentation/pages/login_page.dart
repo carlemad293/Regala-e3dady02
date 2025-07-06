@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'home_page.dart';
 import '../../../app/notification_service.dart';
@@ -224,23 +223,18 @@ class _SignInScreenState extends State<SignInScreen> {
           Center(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(
-                  top: 20.h,
-                  left: 25.w,
-                  right: 25.w,
-                ),
+                padding:
+                    const EdgeInsets.only(top: 20.0, left: 25.0, right: 25.0),
                 child: Card(
                   elevation: 6,
                   color: isDark ? Color(0xFF2A2A2A) : Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.r),
+                    borderRadius: BorderRadius.circular(15),
                   ),
                   child: Container(
-                    width: 500.w,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24.w,
-                      vertical: 20.h,
-                    ),
+                    width: 500,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 20.0),
                     child: AutofillGroup(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -251,83 +245,83 @@ class _SignInScreenState extends State<SignInScreen> {
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.08),
-                                  blurRadius: 15.r,
-                                  spreadRadius: 2.r,
-                                  offset: Offset(0, 6.h),
+                                  blurRadius: 15,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 6),
                                 ),
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 8.r,
-                                  spreadRadius: 1.r,
-                                  offset: Offset(0, 3.h),
+                                  blurRadius: 8,
+                                  spreadRadius: 1,
+                                  offset: Offset(0, 3),
                                 ),
                                 BoxShadow(
                                   color: Colors.blueAccent.withOpacity(0.1),
-                                  blurRadius: 10.r,
-                                  spreadRadius: 1.r,
+                                  blurRadius: 10,
+                                  spreadRadius: 1,
                                   offset: Offset(0, 0),
                                 ),
                               ],
                             ),
                             child: Image.asset(
                               'assets/cross.png',
-                              height: 160.h,
-                              width: 120.w,
+                              height: 160.0,
+                              width: 120.0,
                             ),
                           ),
-                          SizedBox(height: 24.h),
+                          SizedBox(height: 24),
                           Text(
                             'Welcome Back',
                             style: TextStyle(
-                              fontSize: 32.sp,
+                              fontSize: 32,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
-                          SizedBox(height: 12.h),
+                          SizedBox(height: 12),
                           Text(
                             'Sign in to continue',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 18,
                               color:
                                   isDark ? Colors.grey[400] : Colors.grey[700],
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 24.h),
+                          SizedBox(height: 24),
                           _buildTextField(
                             controller: _nameController,
                             label: 'Name',
                             icon: Icons.person_outline,
                           ),
-                          SizedBox(height: 20.h),
+                          SizedBox(height: 20),
                           _buildTextField(
                             controller: _emailController,
                             label: 'Email',
                             icon: Icons.email_outlined,
                             keyboardType: TextInputType.emailAddress,
                           ),
-                          SizedBox(height: 20.h),
+                          SizedBox(height: 20),
                           _buildTextField(
                             controller: _passwordController,
                             label: 'Password',
                             icon: Icons.lock_outline,
                             isPassword: true,
                           ),
-                          SizedBox(height: 24.h),
+                          SizedBox(height: 24),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
-                              icon: Icon(Icons.login, size: 24.sp),
+                              icon: Icon(Icons.login, size: 24),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blueAccent,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 16.h),
+                                padding: EdgeInsets.symmetric(vertical: 16),
                                 textStyle: TextStyle(
-                                  fontSize: 18.sp,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -345,7 +339,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           if (_errorMessage.isNotEmpty)
             Positioned(
-              top: MediaQuery.of(context).padding.top + 16.h,
+              top: MediaQuery.of(context).padding.top + 16,
               left: 0,
               right: 0,
               child: TweenAnimationBuilder<double>(
@@ -354,19 +348,19 @@ class _SignInScreenState extends State<SignInScreen> {
                 curve: Curves.easeOutCubic,
                 builder: (context, value, child) {
                   return Transform.translate(
-                    offset: Offset(0, value * 100.h),
+                    offset: Offset(0, value * 100),
                     child: Opacity(
                       opacity: 1 + value,
                       child: Material(
                         color: Colors.transparent,
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 16.w),
-                          padding: EdgeInsets.all(16.w),
+                          margin: EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: isDark
                                 ? Colors.red.shade900.withOpacity(0.3)
                                 : Colors.red.shade50,
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isDark
                                   ? Colors.red.shade700
@@ -375,16 +369,16 @@ class _SignInScreenState extends State<SignInScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10.r,
+                                blurRadius: 10,
                                 spreadRadius: 0,
-                                offset: Offset(0, 2.h),
+                                offset: Offset(0, 2),
                               ),
                             ],
                           ),
                           child: Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.all(8.w),
+                                padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? Colors.red.shade800.withOpacity(0.2)
@@ -403,13 +397,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                         color: isDark
                                             ? Colors.red.shade300
                                             : Colors.red,
-                                        size: 24.sp,
+                                        size: 24,
                                       ),
                                     );
                                   },
                                 ),
                               ),
-                              SizedBox(width: 12.w),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   _errorMessage,
@@ -417,7 +411,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     color: isDark
                                         ? Colors.red.shade300
                                         : Colors.red,
-                                    fontSize: 16.sp,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -445,7 +439,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           if (_successMessage.isNotEmpty)
             Positioned(
-              top: MediaQuery.of(context).padding.top + 16.h,
+              top: MediaQuery.of(context).padding.top + 16,
               left: 0,
               right: 0,
               child: TweenAnimationBuilder<double>(
@@ -454,19 +448,19 @@ class _SignInScreenState extends State<SignInScreen> {
                 curve: Curves.easeOutCubic,
                 builder: (context, value, child) {
                   return Transform.translate(
-                    offset: Offset(0, value * 100.h),
+                    offset: Offset(0, value * 100),
                     child: Opacity(
                       opacity: 1 + value,
                       child: Material(
                         color: Colors.transparent,
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 16.w),
-                          padding: EdgeInsets.all(16.w),
+                          margin: EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: isDark
                                 ? Colors.green.shade900.withOpacity(0.3)
                                 : Colors.green.shade50,
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isDark
                                   ? Colors.green.shade700
@@ -475,16 +469,16 @@ class _SignInScreenState extends State<SignInScreen> {
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10.r,
+                                blurRadius: 10,
                                 spreadRadius: 0,
-                                offset: Offset(0, 2.h),
+                                offset: Offset(0, 2),
                               ),
                             ],
                           ),
                           child: Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.all(8.w),
+                                padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? Colors.green.shade800.withOpacity(0.2)
@@ -503,13 +497,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                         color: isDark
                                             ? Colors.green.shade300
                                             : Colors.green,
-                                        size: 24.sp,
+                                        size: 24,
                                       ),
                                     );
                                   },
                                 ),
                               ),
-                              SizedBox(width: 12.w),
+                              SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   _successMessage,
@@ -517,7 +511,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     color: isDark
                                         ? Colors.green.shade300
                                         : Colors.green,
-                                    fontSize: 16.sp,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -563,13 +557,14 @@ class _SignInScreenState extends State<SignInScreen> {
       obscureText: isPassword ? _obscurePassword : false,
       keyboardType: keyboardType,
       style: TextStyle(
-        fontSize: 16.sp,
+        fontSize: 16,
         color: isDark ? Colors.white : Colors.grey[700],
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
+          fontSize: 16,
           color: isDark ? Colors.grey[400] : Colors.grey[700],
           fontWeight: FontWeight.w500,
         ),
@@ -591,24 +586,24 @@ class _SignInScreenState extends State<SignInScreen> {
               )
             : null,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
             color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
             color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: Colors.blueAccent, width: 2.h),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
         ),
         filled: true,
         fillColor: isDark ? Color(0xFF3A3A3A) : Colors.grey[50],
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         isDense: true,
         floatingLabelBehavior: FloatingLabelBehavior.never,
       ),

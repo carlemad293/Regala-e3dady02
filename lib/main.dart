@@ -88,20 +88,31 @@ void main() async {
   // Initialize Firebase
   await initializeFirebase();
 
-  // Initialize Notification Service
-  try {
-    await NotificationService().initialize();
-    print('Notification service initialized successfully');
-  } catch (e) {
-    print('Failed to initialize notification service: $e');
-  }
-
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
       child: MyApp(),
     ),
   );
+
+  // Initialize Notification Service after app is running
+  try {
+    await NotificationService().initialize();
+    print('Notification service initialized successfully');
+
+    // For web, test token generation after a delay
+    if (kIsWeb) {
+      Future.delayed(Duration(seconds: 5), () async {
+        print('Testing web token generation...');
+        await NotificationService().forceTokenGeneration();
+
+        // Clean up any test tokens
+        await NotificationService().cleanupTestTokens();
+      });
+    }
+  } catch (e) {
+    print('Failed to initialize notification service: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {

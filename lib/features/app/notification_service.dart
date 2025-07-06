@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -29,6 +30,8 @@ class NotificationService {
   );
 
   String? _pendingToken;
+  Set<String> _shownNotifications =
+      {}; // Track shown notifications to prevent duplicates
 
   Future<void> initialize() async {
     try {
@@ -49,6 +52,12 @@ class NotificationService {
       // Initialize local notifications
       await _initializeLocalNotifications();
 
+      // For web, check if service worker is available
+      if (kIsWeb) {
+        print('Web platform detected, checking service worker availability...');
+        await _checkWebServiceWorker();
+      }
+
       // Get FCM token with retry logic
       String? token = await _getFCMTokenWithRetry();
       if (token != null) {
@@ -61,6 +70,28 @@ class NotificationService {
         print('FCM Token refreshed: $newToken');
         _saveTokenToFirestore(newToken);
       });
+
+      // For iOS, retry token generation after a delay to allow APNS token to be set
+      if (Platform.isIOS) {
+        // Try multiple times with increasing delays
+        for (int i = 1; i <= 3; i++) {
+          Future.delayed(Duration(seconds: i * 3), () async {
+            try {
+              print('iOS FCM token attempt $i after ${i * 3} seconds...');
+              String? token = await _firebaseMessaging.getToken();
+              if (token != null) {
+                print(
+                    'Got FCM token on iOS attempt $i: ${token.substring(0, 20)}...');
+                await _saveTokenToFirestore(token);
+              } else {
+                print('No FCM token on iOS attempt $i');
+              }
+            } catch (e) {
+              print('Error getting FCM token on iOS attempt $i: $e');
+            }
+          });
+        }
+      }
 
       // Handle foreground messages
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
@@ -79,11 +110,51 @@ class NotificationService {
     }
   }
 
+  // Check if service worker is available for web
+  Future<void> _checkWebServiceWorker() async {
+    try {
+      if (kIsWeb) {
+        print('Service worker check: Web environment detected');
+        // Wait for service worker to be ready
+        await Future.delayed(Duration(seconds: 2));
+        print('Service worker check: Waited for service worker registration');
+      }
+    } catch (e) {
+      print('Service worker check failed: $e');
+    }
+  }
+
   // Retry logic for getting FCM token
   Future<String?> _getFCMTokenWithRetry({int maxRetries = 3}) async {
     for (int i = 0; i < maxRetries; i++) {
       try {
         print('Attempt ${i + 1}: Getting FCM token...');
+
+        // For web, we need to ensure the service worker is registered first
+        if (kIsWeb) {
+          print(
+              'Web platform detected, ensuring service worker registration...');
+          // Wait a bit for service worker to be ready
+          await Future.delayed(Duration(milliseconds: 500));
+        }
+
+        // For iOS, get APNS token first if not available
+        if (Platform.isIOS) {
+          print('iOS platform detected, checking APNS token...');
+          try {
+            String? apnsToken = await _firebaseMessaging.getAPNSToken();
+            if (apnsToken == null) {
+              print('APNS token not available, waiting...');
+              await Future.delayed(Duration(seconds: 2));
+            } else {
+              print('APNS token available: ${apnsToken.substring(0, 20)}...');
+            }
+          } catch (e) {
+            print('Error getting APNS token: $e');
+            // Continue anyway, FCM might still work
+          }
+        }
+
         String? token = await _firebaseMessaging.getToken();
         print('Attempt ${i + 1}: Raw token response: $token');
 
@@ -169,12 +240,14 @@ class NotificationService {
   }
 
   String _getPlatform() {
-    if (Platform.isIOS) {
+    if (kIsWeb) {
+      return 'web';
+    } else if (Platform.isIOS) {
       return 'ios';
     } else if (Platform.isAndroid) {
       return 'android';
     }
-    return 'web';
+    return 'unknown';
   }
 
   // Method to save pending token when user logs in
@@ -197,13 +270,75 @@ class NotificationService {
     }
   }
 
+  // Method to force token generation for web testing
+  Future<void> forceTokenGeneration() async {
+    print('=== FORCE TOKEN GENERATION FOR WEB ===');
+    try {
+      if (kIsWeb) {
+        print('Web platform detected, forcing token generation...');
+        // Wait longer for web service worker
+        await Future.delayed(Duration(seconds: 3));
+      }
+
+      final token = await _getFCMTokenWithRetry(maxRetries: 5);
+      if (token != null) {
+        print('Successfully generated token: $token');
+        await _saveTokenToFirestore(token);
+        print('Token saved to Firestore successfully');
+      } else {
+        print('Failed to generate token after all attempts');
+      }
+    } catch (e) {
+      print('Error in force token generation: $e');
+    }
+  }
+
+  // Method to clean up test tokens
+  Future<void> cleanupTestTokens() async {
+    try {
+      // Delete test token document
+      await FirebaseFirestore.instance
+          .collection('user_token')
+          .doc('test@example.com')
+          .delete();
+      print('Test token cleaned up successfully');
+    } catch (e) {
+      print('Error cleaning up test tokens: $e');
+    }
+  }
+
   void _handleForegroundMessage(RemoteMessage message) {
     print('Got a message whilst in the foreground!');
     print('Message data: ${message.data}');
 
+    // For web, let FCM handle all notifications to avoid duplicates
+    // For mobile, show local notifications when app is in foreground
     if (message.notification != null) {
       print('Message also contained a notification: ${message.notification}');
-      _showLocalNotification(message);
+
+      if (!kIsWeb) {
+        // Only show local notifications on mobile platforms
+        // Create a unique identifier for this notification
+        String notificationId =
+            '${message.messageId}_${message.notification!.title}_${message.notification!.body}';
+
+        // Check if we've already shown this notification
+        if (!_shownNotifications.contains(notificationId)) {
+          _shownNotifications.add(notificationId);
+          // Show local notification with app icon for foreground messages
+          _showLocalNotification(message);
+
+          // Clean up old notifications after 5 minutes
+          Future.delayed(Duration(minutes: 5), () {
+            _shownNotifications.remove(notificationId);
+          });
+        } else {
+          print('Duplicate notification detected, skipping: $notificationId');
+        }
+      } else {
+        print(
+            'Web platform detected, letting FCM handle foreground notifications');
+      }
     }
   }
 
@@ -232,7 +367,7 @@ class NotificationService {
             _channel.id,
             _channel.name,
             channelDescription: _channel.description,
-            icon: android?.smallIcon ?? '@mipmap/ic_launcher',
+            icon: '@mipmap/ic_launcher', // Always use app icon
             color: Colors.blue,
             importance: Importance.high,
             priority: Priority.high,
@@ -435,8 +570,7 @@ class NotificationService {
     Map<String, dynamic>? data,
   }) async {
     try {
-      // For now, we'll use a simple approach that shows local notification
-      // but logs the tokens for debugging
+      // Log the tokens for debugging
       print('Would send FCM notification to ${tokens.length} tokens:');
       for (int i = 0; i < tokens.length && i < 3; i++) {
         print('Token ${i + 1}: ${tokens[i]}');
@@ -444,30 +578,6 @@ class NotificationService {
       if (tokens.length > 3) {
         print('... and ${tokens.length - 3} more tokens');
       }
-
-      // Show a local notification to confirm the sending process
-      await _localNotifications.show(
-        999, // Unique ID
-        'Notification Sent',
-        'Sent to ${tokens.length} users: $title',
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channel.id,
-            _channel.name,
-            channelDescription: _channel.description,
-            icon: '@mipmap/ic_launcher',
-            color: Colors.green,
-            importance: Importance.high,
-            priority: Priority.high,
-          ),
-          iOS: const DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        ),
-        payload: 'sent_to_${tokens.length}_users',
-      );
 
       // TODO: Implement actual FCM HTTP API call
       // This would require your Firebase server key

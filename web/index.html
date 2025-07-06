@@ -21,17 +21,33 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
+    var serviceWorkerVersion = "{{flutter_service_worker_version}}";
   </script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
   <script src="flutter.js" defer></script>
 </head>
 <body>
 <script>
+  // Register service worker before Flutter loads
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then(function(registration) {
+          console.log('Service Worker registered successfully:', registration);
+        })
+        .catch(function(error) {
+          console.log('Service Worker registration failed:', error);
+        });
+    });
+  }
+
   window.addEventListener('load', function() {
     // Initialize Flutter Web
     _flutter = {
       loader: {
-        loadEntrypoint: function(options) {
+        load: function(options) {
           return new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.src = 'main.dart.js';
@@ -50,7 +66,7 @@
       }
     };
 
-    _flutter.loader.loadEntrypoint({
+    _flutter.loader.load({
       serviceWorker: {
         serviceWorkerVersion: serviceWorkerVersion,
       }

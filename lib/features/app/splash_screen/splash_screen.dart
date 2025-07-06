@@ -200,13 +200,6 @@ class _SplashScreenState extends State<SplashScreen>
               } catch (e) {
                 print('Failed to initialize notification service: $e');
               }
-              try {
-                await NotificationService().initialize();
-                print(
-                    'Notification service initialized for user: ${userCredential.user!.email}');
-              } catch (e) {
-                print('Failed to initialize notification service: $e');
-              }
 
               // Optimized: Reduced from 5 seconds to 2.5 seconds
               await Future.delayed(const Duration(milliseconds: 2500));

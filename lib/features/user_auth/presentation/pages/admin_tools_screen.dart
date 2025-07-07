@@ -141,9 +141,11 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
     } catch (e) {
       print('Error uploading image: $e');
       setState(() => _isUploading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to upload image: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to upload image: $e')),
+        );
+      }
       return null;
     }
   }
@@ -155,14 +157,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
         'version': DateTime.now().millisecondsSinceEpoch.toString(),
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Image updated successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Image updated successfully')),
+        );
+      }
     } catch (e) {
       print('Error updating image URL: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update image: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update image: $e')),
+        );
+      }
     }
   }
 
@@ -227,14 +233,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
         setState(() => _drawerImageUrl = null);
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Image removed successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Image removed successfully')),
+        );
+      }
     } catch (e) {
       print('Error deleting image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to remove image: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to remove image: $e')),
+        );
+      }
     }
   }
 
@@ -245,14 +255,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
           .doc(docId)
           .set({'link': link});
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Link updated successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Link updated successfully')),
+        );
+      }
     } catch (e) {
       print('Error updating link: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update link: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update link: $e')),
+        );
+      }
     }
   }
 
@@ -337,13 +351,17 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
         _descriptionController.clear();
         _loadEvents();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Event added successfully')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Event added successfully')),
+          );
+        }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add event: $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to add event: $e')),
+          );
+        }
       }
     }
   }
@@ -355,13 +373,17 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
           .doc(eventId)
           .delete();
       _loadEvents();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Event deleted successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Event deleted successfully')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete event: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete event: $e')),
+        );
+      }
     }
   }
 
@@ -426,18 +448,22 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
     } catch (e) {
       print('Error loading fixers: $e');
       setState(() => _isLoadingFixers = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load fixers: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load fixers: $e')),
+        );
+      }
     }
   }
 
   Future<void> _addFixer() async {
     if (_fixerNameController.text.isEmpty ||
         _fixerNumberController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all fields')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please fill in all fields')),
+        );
+      }
       return;
     }
 
@@ -451,14 +477,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
       _fixerNumberController.clear();
       _loadFixers();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Fixer added successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fixer added successfully')),
+        );
+      }
     } catch (e) {
       print('Error adding fixer: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add fixer: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add fixer: $e')),
+        );
+      }
     }
   }
 
@@ -470,14 +500,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
           .delete();
 
       _loadFixers();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Fixer deleted successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fixer deleted successfully')),
+        );
+      }
     } catch (e) {
       print('Error deleting fixer: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete fixer: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete fixer: $e')),
+        );
+      }
     }
   }
 
@@ -567,14 +601,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                   _fixerNumberController.clear();
                   _loadFixers();
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Fixer updated successfully')),
-                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Fixer updated successfully')),
+                    );
+                  }
                 } catch (e) {
                   print('Error updating fixer: $e');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to update fixer: $e')),
-                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to update fixer: $e')),
+                    );
+                  }
                 }
               },
             ),
@@ -822,13 +860,17 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                   _loadEvents();
 
                   Navigator.of(context).pop(true);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Event updated successfully')),
-                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Event updated successfully')),
+                    );
+                  }
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to update event: $e')),
-                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to update event: $e')),
+                    );
+                  }
                 }
               }
             },
@@ -853,9 +895,11 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
   Future<void> _addAnnouncement() async {
     if (_announcementTitleController.text.isEmpty ||
         _announcementContentController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all fields')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please fill in all fields')),
+        );
+      }
       return;
     }
 
@@ -870,14 +914,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
       _announcementTitleController.clear();
       _announcementContentController.clear();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Announcement added successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Announcement added successfully')),
+        );
+      }
     } catch (e) {
       print('Error adding announcement: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add announcement: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add announcement: $e')),
+        );
+      }
     }
   }
 
@@ -1069,18 +1117,22 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                               _announcementTitleController.clear();
                               _announcementContentController.clear();
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        'Announcement updated successfully')),
-                              );
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Announcement updated successfully')),
+                                );
+                              }
                             } catch (e) {
                               print('Error updating announcement: $e');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        'Failed to update announcement: $e')),
-                              );
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Failed to update announcement: $e')),
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -1112,14 +1164,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
           .doc(announcementId)
           .delete();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Announcement deleted successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Announcement deleted successfully')),
+        );
+      }
     } catch (e) {
       print('Error deleting announcement: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete announcement: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete announcement: $e')),
+        );
+      }
     }
   }
 
@@ -1145,9 +1201,11 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
   Future<void> _updatePsalmContent() async {
     if (_psalmTitleController.text.isEmpty ||
         _psalmContentController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all fields')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please fill in all fields')),
+        );
+      }
       return;
     }
 
@@ -1161,14 +1219,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
         'lastUpdated': FieldValue.serverTimestamp(),
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Psalm content updated successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Psalm content updated successfully')),
+        );
+      }
     } catch (e) {
       print('Error updating psalm content: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update psalm content: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update psalm content: $e')),
+        );
+      }
     }
   }
 
@@ -1236,14 +1298,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
         _psalmContentController.clear();
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Psalm content cleared successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Psalm content cleared successfully')),
+        );
+      }
     } catch (e) {
       print('Error clearing psalm content: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to clear psalm content: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to clear psalm content: $e')),
+        );
+      }
     }
   }
 
@@ -1277,9 +1343,11 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
 
   Future<void> _updateVersionControl() async {
     if (_appVersionController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter the required app version')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please enter the required app version')),
+        );
+      }
       return;
     }
 
@@ -1297,14 +1365,18 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
         'last_updated': FieldValue.serverTimestamp(),
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Version control updated successfully')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Version control updated successfully')),
+        );
+      }
     } catch (e) {
       print('Error updating version control: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update version control: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update version control: $e')),
+        );
+      }
     }
   }
 
@@ -1650,7 +1722,11 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                           ),
                         ),
                       ),
-                      SizedBox(width: 16),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
                       Expanded(
                         child: ElevatedButton.icon(
                           icon: Icon(Icons.access_time),
@@ -3649,11 +3725,13 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                       final name = nameController.text.trim();
                       final points = int.tryParse(pointsController.text.trim());
                       if (name.isEmpty || points == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text('Please enter valid name and points')),
-                        );
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text('Please enter valid name and points')),
+                          );
+                        }
                         return;
                       }
                       await FirebaseFirestore.instance
@@ -3664,9 +3742,12 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                       });
                       nameController.clear();
                       pointsController.clear();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Activity added successfully')),
-                      );
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text('Activity added successfully')),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isDark ? Colors.blue[900] : Colors.blue,
@@ -3812,11 +3893,13 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                                     .collection('activities')
                                     .doc(doc.id)
                                     .delete();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Activity deleted successfully')),
-                                );
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Activity deleted successfully')),
+                                  );
+                                }
                               }
                             },
                           ),
@@ -3907,9 +3990,12 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
               final name = nameController.text.trim();
               final points = int.tryParse(pointsController.text.trim());
               if (name.isEmpty || points == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please enter valid name and points')),
-                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text('Please enter valid name and points')),
+                  );
+                }
                 return;
               }
               await FirebaseFirestore.instance
@@ -3920,9 +4006,11 @@ class _AdminToolsScreenState extends State<AdminToolsScreen>
                 'points': points,
               });
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Activity updated successfully')),
-              );
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Activity updated successfully')),
+                );
+              }
             },
           ),
         ],
